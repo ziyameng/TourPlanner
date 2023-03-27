@@ -16,9 +16,25 @@
   <body>
     <h1>Welcome to The Holiday Planner!</h1>
     <div id="map"></div>
+
+    <!-- Link Google Maps API -->
     <script
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAjfXj42VFWTbGiXkw__ykGHfrxWQI41-s&callback=initMap"
       defer
     ></script>
+
+    <!-- Let the user add specifications on where they want to go -->
+    <form id="coordinates-form" onsubmit="event.preventDefault();">
+      <label for="lat">Latitude:</label>
+      <input type="text" id="lat" name="lat" /><br /><br />
+      <label for="lng">Longitude:</label>
+      <input type="text" id="lng" name="lng" /><br /><br />
+      <input
+        type="submit"
+        value="Submit"
+        id="submit-button"
+        onclick="addMarker(event)"
+      />
+    </form>
   </body>
 </html>
