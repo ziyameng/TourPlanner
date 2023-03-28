@@ -4,7 +4,7 @@
 // Creating a Holiday Planner
 
 // Defining some variables to be accessible
-let map;
+var map;
 
 // Initialise the map, starting position in St Andrews
 function initMap() {
@@ -38,6 +38,10 @@ function addMarker(event) {
     map: map,
   });
 }
+
+// Letting users look up places
+let radius = parseFloat(document.getElementById("radius").value);
+let activity = document.getElementById("activity").value;
 
 // Test data with coordinates for London, delete before submission
 // Lat: 51.509865
