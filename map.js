@@ -31,17 +31,30 @@ function addMarker(event) {
   // Get the values the user added through the HTML inputs
   let lat = parseFloat(document.getElementById("lat").value);
   let lng = parseFloat(document.getElementById("lng").value);
-  const coordinates = { lat: lat, lng: lng };
+  let radius = parseFloat(document.getElementById("radius").value);
+  let activity = document.getElementById("activity").value;
 
-  let marker = new google.maps.Marker({
-    position: coordinates,
-    map: map,
-  });
+  // Add URL with appropriate API key for Google Places API
+  // This API is used to display various places based on type, as chosen by user activity input
+  const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat}%2C${lng}&radius=${radius}&type=${activity}&key=AIzaSyAjfXj42VFWTbGiXkw__ykGHfrxWQI41-s`;
+
+  fetch(url)
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data.results);
+      // Loop through the results and add a marker for each place
+      data.results.forEach((result) => {
+        let marker = new google.maps.Marker({
+          position: {
+            lat: result.geometry.location.lat,
+            lng: result.geometry.location.lng,
+          },
+          map: map,
+        });
+      });
+    })
+    .catch((error) => console.log(error));
 }
-
-// Letting users look up places
-let radius = parseFloat(document.getElementById("radius").value);
-let activity = document.getElementById("activity").value;
 
 // Test data with coordinates for London, delete before submission
 // Lat: 51.509865
