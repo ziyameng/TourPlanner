@@ -18,6 +18,22 @@ app.use(cors());
 // If running on school servers use you unique id found by running "id -u."
 const API_PORT = 23843;
 
+// ======== Frontend endpoints ========
+// Linked homepage to frontend.html
+app.get("/", function (req, res) {
+  res.sendFile(__dirname + "/frontend.html");
+});
+
+// Added endpoint to link to frontend.js from server
+app.get("/frontend.js", function (req, res) {
+  res.sendFile(__dirname + "/frontend.js");
+});
+
+// Added endpoint to link to frontend.css from server
+app.get("/frontend.css", function (req, res) {
+  res.sendFile(__dirname + "/style.css");
+});
+
 // Instruct server to listen on port and log out a message, to know program is running as intended
 app.listen(API_PORT, () => {
   console.log(`Listening on localhost: ${API_PORT}`);

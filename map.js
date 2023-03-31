@@ -34,6 +34,9 @@ function addMarker(event) {
   let radius = parseFloat(document.getElementById("radius").value);
   let activity = document.getElementById("activity").value;
 
+  // Create a new map, to add to the application
+  map = new google.maps.Map(document.getElementById("map"));
+
   // Add URL with appropriate API key for Google Places API
   // This API is used to display various places based on type, as chosen by user activity input
   const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat}%2C${lng}&radius=${radius}&type=${activity}&key=AIzaSyAjfXj42VFWTbGiXkw__ykGHfrxWQI41-s`;
@@ -46,8 +49,8 @@ function addMarker(event) {
       data.results.forEach((result) => {
         let marker = new google.maps.Marker({
           position: {
-            lat: result.geometry.location.lat,
-            lng: result.geometry.location.lng,
+            lat: lat,
+            lng: lng,
           },
           map: map,
         });
