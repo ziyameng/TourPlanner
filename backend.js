@@ -14,6 +14,9 @@ app.use(express.urlencoded({ extended: true })); // Allow parsing of extended sy
 app.use(express.json());
 app.use(cors());
 
+// // Use static middleware from express
+// app.use(express.static("/static"));
+
 // Setting up the API port
 // If running on school servers use you unique id found by running "id -u."
 const API_PORT = 23843;
@@ -25,12 +28,12 @@ app.get("/", function (req, res) {
 });
 
 // Added endpoint to link to frontend.js from server
-app.get("/frontend.js", function (req, res) {
-  res.sendFile(__dirname + "/frontend.js");
+app.get("/map.js", function (req, res) {
+  res.sendFile(__dirname + "/map.js");
 });
 
 // Added endpoint to link to frontend.css from server
-app.get("/frontend.css", function (req, res) {
+app.get("/style.css", function (req, res) {
   res.sendFile(__dirname + "/style.css");
 });
 

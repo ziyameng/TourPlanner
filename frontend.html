@@ -9,19 +9,30 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://api.mapbox.com/mapbox-gl-js/v2.13.0/mapbox-gl.css"
+      rel="stylesheet"
+    />
+    <link href="style.css" rel="stylesheet" />
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.13.0/mapbox-gl.js"></script>
     <script src="map.js"></script>
     <title>Holiday Planner</title>
   </head>
   <body>
     <h1>Welcome to The Holiday Planner!</h1>
     <div id="map"></div>
-
-    <!-- Link Google Maps API -->
-    <script
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAjfXj42VFWTbGiXkw__ykGHfrxWQI41-s&callback=initMap"
-      defer
-    ></script>
+    <script>
+      mapboxgl.accessToken =
+        "pk.eyJ1IjoidGhqMSIsImEiOiJjbGZ3emY1d2swamU1M2ZxcW92MXR3MTJmIn0.m3Uv26y9oW35uVarci-7rA";
+      const map = new mapboxgl.Map({
+        container: "map",
+        style: "mapbox://styles/mapbox/streets-v12",
+        center: [-2.7967, 56.3398], // Longitude then latitude, starts in St Andrews
+        zoom: 14,
+      });
+      // Add zoom and rotation controls to the map.
+      map.addControl(new mapboxgl.NavigationControl());
+    </script>
 
     <!-- Let the user add specifications on where they want to go -->
     <form id="coordinates-form" onsubmit="event.preventDefault();">

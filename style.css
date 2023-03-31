@@ -5,7 +5,7 @@
 
 /* Styling the map display */
 #map {
+  margin: 20px;
+  width: 800px;
   height: 400px;
-  width: 90%;
-  margin: 15px;
 }
