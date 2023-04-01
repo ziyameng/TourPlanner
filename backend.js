@@ -14,9 +14,6 @@ app.use(express.urlencoded({ extended: true })); // Allow parsing of extended sy
 app.use(express.json());
 app.use(cors());
 
-// // Use static middleware from express
-// app.use(express.static("/static"));
-
 // Setting up the API port
 // If running on school servers use you unique id found by running "id -u."
 const API_PORT = 23843;

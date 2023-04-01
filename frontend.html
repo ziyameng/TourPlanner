@@ -16,6 +16,7 @@
     <link href="style.css" rel="stylesheet" />
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.13.0/mapbox-gl.js"></script>
     <script src="map.js"></script>
+
     <title>Holiday Planner</title>
   </head>
   <body>
@@ -30,11 +31,11 @@
         center: [-2.7967, 56.3398], // Longitude then latitude, starts in St Andrews
         zoom: 14,
       });
-      // Add zoom and rotation controls to the map.
+      // Add zoom functionality to the map displayed
       map.addControl(new mapboxgl.NavigationControl());
     </script>
 
-    <!-- Let the user add specifications on where they want to go -->
+    <!-- Let user search based on location and activity -->
     <form id="coordinates-form" onsubmit="event.preventDefault();">
       <label for="lat">Latitude:</label>
       <input type="text" id="lat" name="lat" /><br /><br />
@@ -44,21 +45,20 @@
       <input type="text" id="radius" name="radius" /><br /><br />
       <label for="activity">Choose an activity to see:</label>
       <select name="activity" id="activity">
-        <option value="cafe">Cafe</option>
-        <option value="casino">Casino</option>
-        <option value="church">Church</option>
-        <option value="lodging">Lodging</option>
-        <option value="movie_theater">Movie Theater</option>
-        <option value="museum">Museum</option>
-        <option value="night_club">Night Club</option>
-        <option value="park">Park</option>
-        <option value="restaurant">Restaurant</option>
-        <option value="shopping_mall">Shopping Mall</option>
-        <option value="spa">Spa</option>
-        <option value="stadium">Stadium</option>
-        <option value="tourist_attraction">Tourist Attraction</option>
-        <option value="travel_agency">Travel Agency</option>
-        <option value="zoo">Zoo</option>
+        <option value="accomodations">Accomodations</option>
+        <option value="bars">Bars</option>
+        <option value="cafes">Cafes</option>
+        <option value="churches">Churches</option>
+        <option value="monuments_and_memorials">Monuments</option>
+        <option value="cinemas">Movie Theaters</option>
+        <option value="museums">Museums</option>
+        <option value="nightclubs">Night Clubs</option>
+        <option value="gardens_and_parks">Parks</option>
+        <option value="restaurant">Restaurants</option>
+        <option value="malls">Shopping Malls</option>
+        <option value="sport">Sport</option>
+        <option value="stadiums">Stadiums</option>
+        <option value="tourist_object">Tourist Attraction</option>
       </select>
       <input
         type="submit"
