@@ -5,7 +5,10 @@
 
 /* Styling the map display */
 #map {
-  margin: 20px;
-  width: 800px;
-  height: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80%;
+  height: 500px;
+  margin: auto;
 }

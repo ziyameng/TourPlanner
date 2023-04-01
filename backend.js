@@ -18,6 +18,10 @@ app.use(cors());
 // If running on school servers use you unique id found by running "id -u."
 const API_PORT = 23843;
 
+// Defining variable to store created locations
+// For testing, will use database later
+let createdLocations = [];
+
 // ======== Frontend endpoints ========
 // Linked homepage to frontend.html
 app.get("/", function (req, res) {
@@ -37,4 +41,20 @@ app.get("/style.css", function (req, res) {
 // Instruct server to listen on port and log out a message, to know program is running as intended
 app.listen(API_PORT, () => {
   console.log(`Listening on localhost: ${API_PORT}`);
+});
+
+// Endpoint to get the emojitar components
+app.get("/user-locations", (req, res) => {
+  res.send(createdLocations);
+});
+
+// ======== Backend endpoints ========
+// Endpoint to receive custom locations data from frontend
+app.post("/user-locations", function (req, res) {
+  const customLocation = req.body;
+
+  createdLocations.push(customLocation);
+  res
+    .status(200)
+    .json({ success: true, message: `Added Location ${customLocation.name}` });
 });

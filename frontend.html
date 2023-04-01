@@ -16,7 +16,6 @@
     <link href="style.css" rel="stylesheet" />
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.13.0/mapbox-gl.js"></script>
     <script src="map.js"></script>
-
     <title>Holiday Planner</title>
   </head>
   <body>
@@ -36,7 +35,8 @@
     </script>
 
     <!-- Let user search based on location and activity -->
-    <form id="coordinates-form" onsubmit="event.preventDefault();">
+    <p>Search for activities in the map</p>
+    <form id="search-form" onsubmit="event.preventDefault();">
       <label for="lat">Latitude:</label>
       <input type="text" id="lat" name="lat" /><br /><br />
       <label for="lng">Longitude:</label>
@@ -63,9 +63,42 @@
       <input
         type="submit"
         value="Submit"
-        id="submit-button"
+        id="search-submit-button"
         onclick="addMarker(event)"
       />
+    </form>
+    <p>Upload and add your own activity to the map</p>
+    <form id="uploaded-activities" onsubmit="event.preventDefault();">
+      <label for="user-lat">Add Latitude:</label>
+      <input type="text" id="user-lat" name="user-lat" /><br /><br />
+      <label for="user-lng">Add Longitude:</label>
+      <input type="text" id="user-lng" name="user-lng" /><br /><br />
+      <label for="user-activity">Choose the type of activity:</label>
+      <select name="user-activity" id="user-activity">
+        <option value="accomodations">Accomodations</option>
+        <option value="bars">Bars</option>
+        <option value="cafes">Cafes</option>
+        <option value="churches">Churches</option>
+        <option value="monuments_and_memorials">Monuments</option>
+        <option value="cinemas">Movie Theaters</option>
+        <option value="museums">Museums</option>
+        <option value="nightclubs">Night Clubs</option>
+        <option value="gardens_and_parks">Parks</option>
+        <option value="restaurant">Restaurants</option>
+        <option value="malls">Shopping Malls</option>
+        <option value="sport">Sport</option>
+        <option value="stadiums">Stadiums</option>
+        <option value="tourist_object">Tourist Attraction</option>
+      </select>
+      <label for="activity-name">Name of Activity:</label>
+      <input type="text" id="activity-name" name="activity-name" />
+      <label for="activity-description">Description of Activity:</label>
+      <input
+        type="text"
+        id="activity-description"
+        name="activity-description"
+      />
+      <button onclick="saveCustomLocation(event)">Submit</button>
     </form>
   </body>
 </html>
