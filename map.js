@@ -18,7 +18,7 @@ async function saveCustomLocation() {
   const activityType = document.getElementById("user-activity").value;
   const name = document.getElementById("activity-name").value;
   const description = document.getElementById("activity-description").value;
-  let postDate = new Date().toLocaleDateString('en-GB');
+  let postDate = new Date().toLocaleDateString("en-GB");
 
   // Define the data to be sent to the backend server
   const customLocation = {
@@ -94,7 +94,7 @@ async function addMarkers() {
 
     // Add marker from OpenTripMap to the map display
     // OpenTripMap locations are displayed in red
-    marker = new mapboxgl.Marker({ color: "red" })
+    marker = new mapboxgl.Marker({ color: "indianred" })
       .setLngLat(coordinates)
       .addTo(map)
       .setPopup(
@@ -116,16 +116,50 @@ async function addMarkers() {
     const coordinates = location.coordinates;
     const name = location.name;
     const description = location.description;
+    const radiusKm = radius / 1000;
 
-    // Add marker from users to the map display
-    // User locations are displayed in green
-    marker = new mapboxgl.Marker({ color: "green" })
-      .setLngLat(coordinates)
-      .addTo(map)
-      .setPopup(
-        new mapboxgl.Popup().setHTML(`<h3>${name}</h3><p>${description}`)
-      );
-    markers.push(marker);
+    // Calculate the distance between user search coordinates and saved location coordinates
+    const distance = distanceCoordinatesKm(
+      lat,
+      lng,
+      coordinates[1],
+      coordinates[0]
+    );
+
+    if (distance <= radiusKm) {
+      // Add marker from users to the map display
+      // User locations are displayed in orange
+      marker = new mapboxgl.Marker({ color: "darkorange" })
+        .setLngLat(coordinates)
+        .addTo(map)
+        .setPopup(
+          new mapboxgl.Popup().setHTML(`<h3>${name}</h3><p>${description}`)
+        );
+      markers.push(marker);
+    }
+    map.setCenter([lng, lat]);
   }
-  map.setCenter([lng, lat]);
+}
+
+// Function to calculate distance between user input and saved locations, for a range
+// Function for these calculations found in external source (Pons, 2009)
+function distanceCoordinatesKm(lat1, lon1, lat2, lon2) {
+  var R = 6371;
+  var dLat = ((lat2 - lat1) * Math.PI) / 180;
+  var dLon = ((lon2 - lon1) * Math.PI) / 180;
+  var a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos((lat1 * Math.PI) / 180) *
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  var d = R * c;
+  return d;
+}
+
+// Function for converting degrees to radians
+// Function for these calculations found in external source (W3Resources, 2022)
+function deg2rad(deg) {
+  return deg * (Math.PI / 180);
 }
