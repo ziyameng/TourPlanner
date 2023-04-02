@@ -60,12 +60,7 @@
         <option value="stadiums">Stadiums</option>
         <option value="tourist_object">Tourist Attraction</option>
       </select>
-      <input
-        type="submit"
-        value="Submit"
-        id="search-submit-button"
-        onclick="addMarker(event)"
-      />
+      <button onclick="addMarkers(event)">Submit</button>
     </form>
     <p>Upload and add your own activity to the map</p>
     <form id="uploaded-activities" onsubmit="event.preventDefault();">

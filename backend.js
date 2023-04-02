@@ -20,7 +20,7 @@ const API_PORT = 23843;
 
 // Defining variable to store created locations
 // For testing, will use database later
-let createdLocations = [];
+let customLocations = [];
 
 // ======== Frontend endpoints ========
 // Linked homepage to frontend.html
@@ -38,14 +38,9 @@ app.get("/style.css", function (req, res) {
   res.sendFile(__dirname + "/style.css");
 });
 
-// Instruct server to listen on port and log out a message, to know program is running as intended
-app.listen(API_PORT, () => {
-  console.log(`Listening on localhost: ${API_PORT}`);
-});
-
 // Endpoint to get the emojitar components
 app.get("/user-locations", (req, res) => {
-  res.send(createdLocations);
+  res.send(customLocations);
 });
 
 // ======== Backend endpoints ========
@@ -53,8 +48,13 @@ app.get("/user-locations", (req, res) => {
 app.post("/user-locations", function (req, res) {
   const customLocation = req.body;
 
-  createdLocations.push(customLocation);
+  customLocations.push(customLocation);
   res
     .status(200)
     .json({ success: true, message: `Added Location ${customLocation.name}` });
+});
+
+// Instruct server to listen on port and log out a message, to know program is running as intended
+app.listen(API_PORT, () => {
+  console.log(`Listening on localhost: ${API_PORT}`);
 });
