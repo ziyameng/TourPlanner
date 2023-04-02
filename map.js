@@ -18,6 +18,7 @@ async function saveCustomLocation() {
   const activityType = document.getElementById("user-activity").value;
   const name = document.getElementById("activity-name").value;
   const description = document.getElementById("activity-description").value;
+  let postDate = new Date().toLocaleDateString('en-GB');
 
   // Define the data to be sent to the backend server
   const customLocation = {
@@ -25,6 +26,7 @@ async function saveCustomLocation() {
     activity: activityType,
     name: name,
     description: description,
+    date: postDate,
   };
 
   // Send the data for the newly added activity to the backend to be saved
