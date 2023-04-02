@@ -13,6 +13,11 @@ table th {
 table tr:nth-child(even){
     background-color: #f2f2f2;
 }
-button {
+.deleteBtn {
     width: 100%;
+}
+.goBackBtn{
+    display:block;
+    margin: 0 auto;
+    width: 20%;
 }

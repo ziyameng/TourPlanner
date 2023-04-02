@@ -11,17 +11,19 @@ const tripMapApiKey =
 
 // Let users submit their own activities to the application
 // Store and process these so they can be displayed in the map when called
-async function saveCustomLocation() {
-  const lat = parseFloat(document.getElementById("user-lat").value);
-  const lng = parseFloat(document.getElementById("user-lng").value);
-  const coordinates = [lng, lat];
-  const activityType = document.getElementById("user-activity").value;
-  const name = document.getElementById("activity-name").value;
-  const description = document.getElementById("activity-description").value;
-  let postDate = new Date().toLocaleDateString("en-GB");
+async function saveCustomLocation(event) {
+  let lat = parseFloat(document.getElementById("user-lat").value);
+  let lng = parseFloat(document.getElementById("user-lng").value);
+  let coordinates = [lng, lat];
+  let activityType = document.getElementById("user-activity").value;
+  let name = document.getElementById("activity-name").value;
+  let description = document.getElementById("activity-description").value;
+  let postDate = new Date().toLocaleDateString('en-GB');
+  let postId = "id" + Math.random().toString(20).slice(2);
 
   // Define the data to be sent to the backend server
   const customLocation = {
+    id: postId,
     coordinates: coordinates,
     activity: activityType,
     name: name,
