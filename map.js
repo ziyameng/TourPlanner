@@ -19,9 +19,11 @@ async function saveCustomLocation(event) {
   let name = document.getElementById("activity-name").value;
   let description = document.getElementById("activity-description").value;
   let postDate = new Date().toLocaleDateString('en-GB');
+  let postId = "id" + Math.random().toString(20).slice(2); // To create an unique ID for each post (Reference: https://stackoverflow.com/questions/3231459/how-can-i-create-unique-ids-with-javascript)
 
   // Define the data to be sent to the backend server
   const customLocation = {
+    id: postId,
     coordinates: coordinates,
     activity: activityType,
     name: name,

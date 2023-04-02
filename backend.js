@@ -7,6 +7,7 @@
 // Cors is imported to allow requests to different domain
 var express = require("express");
 var cors = require("cors");
+var mongoose = require("mongoose");
 var app = express();
 
 // Set up middleware functions in Express to handle incoming requests
@@ -36,6 +37,21 @@ app.get("/map.js", function (req, res) {
 // Added endpoint to link to frontend.css from server
 app.get("/style.css", function (req, res) {
   res.sendFile(__dirname + "/style.css");
+});
+
+// Linked to itinerary.html
+app.get("/itinerary.html", function (req, res) {
+  res.sendFile(__dirname + "/itinerary.html");
+});
+
+// Added endpoint to link to itinerary.js from server
+app.get("/itinerary.js", function (req, res) {
+  res.sendFile(__dirname + "/itinerary.js");
+});
+
+// Added endpoint to link to itinerary.css from server
+app.get("/itinerary.css", function (req, res) {
+  res.sendFile(__dirname + "/itinerary.css");
 });
 
 // Instruct server to listen on port and log out a message, to know program is running as intended
