@@ -28,6 +28,11 @@ app.get("/", function (req, res) {
   res.sendFile(__dirname + "/frontend.html");
 });
 
+// Linked itinerary page to itinerary.html
+app.get("/itinerary", function (req, res) {
+  res.sendFile(__dirname + "/itinerary.html");
+});
+
 // Added endpoint to link to frontend.js from server
 app.get("/map.js", function (req, res) {
   res.sendFile(__dirname + "/map.js");
