@@ -23,7 +23,7 @@ fetch("http://localhost:23843/user-locations")
         cell2.innerHTML = data[i].name;
         cell3.innerHTML = data[i].description;
         cell4.innerHTML = data[i].date;
-        cell5.innerHTML = `<button id = ${data[i].id} onclick="deleteActivity('${data[i].id}')">Delete</button>`;
+        cell5.innerHTML = `<button class = "deleteBtn" id = ${data[i].id} onclick="deleteActivity('${data[i].id}')">Delete</button>`;
         console.log(data[i].activity);
     }
     

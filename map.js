@@ -19,6 +19,7 @@ async function saveCustomLocation(event) {
   let name = document.getElementById("activity-name").value;
   let description = document.getElementById("activity-description").value;
   let postDate = new Date().toLocaleDateString('en-GB');
+  let postId = "id" + Math.random().toString(20).slice(2);
 
   // Define the data to be sent to the backend server
   const customLocation = {
