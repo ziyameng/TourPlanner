@@ -58,8 +58,20 @@ app.get('/', (req, res) => {
 // app.get('/location')
 
 */
-app.get('/', (req, res) => {
-    res.send('Hello World!')
+
+async function deleteAllDataInCollection() {
+    const location_collection = db.collection('location')
+    const activity_collection = db.collection('activity')
+    const comment_collection = db.collection('comment')
+
+    await location_collection.deleteMany({})
+    await activity_collection.deleteMany({})
+    await comment_collection.deleteMany({})
+}
+
+app.get('/', async (req, res) => {
+    await deleteAllDataInCollection()
+    res.send('clear collections')
   })
 
 app.post('/location/add', async (req, res) => {
@@ -69,7 +81,7 @@ app.post('/location/add', async (req, res) => {
     // create a document to insert
     const location = req.body
 
-    location['activities'] = []
+    // location['activities'] = []
 
     const result = await location_collection.insertOne(location)
     
@@ -96,7 +108,44 @@ app.get('/location/get/all', async (req, res) => {
 app.get('/location/get/byname', async (req, res) => {
     const location_collection = db.collection('location');
 
-    const query = { locationName : req.body.locationName }
+    let location = await getLocationByName(req.body.locationName)
+
+    if(location != null)
+        res.status(200).send(location)
+    else res.status(400).send("Error: No such location")
+})
+
+app.post('/activity/add', async (req, res) => {
+    const activity_collection = db.collection('activity')
+
+    let activity = req.body
+
+    const result = await activity_collection.insertOne(activity)
+
+    res.status(200).send("add sucess" + result);
+})
+
+app.get('/activity/get/bylocation', async (req, res) => {
+    const activity_collection = db.collection('activity')
+
+    let locationName = req.body.locationName
+
+    filter = { 'locationName' : locationName }
+
+    let results = []
+
+    let cursor = activity_collection.find(filter)
+
+    await cursor.forEach((item) => results.push(item))
+
+    res.status(200).send(results)
+
+})
+
+async function getLocationByName(name) {
+    const location_collection = db.collection('location');
+
+    const query = { locationName : name }
     const options = {}
 
     let results = []
@@ -105,8 +154,8 @@ app.get('/location/get/byname', async (req, res) => {
 
     await cursor.forEach((item) => results.push(item))
 
-    res.status(200).send(results)
-})
+    return results.length == 0 ? null : results[0]
+}
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
