@@ -142,6 +142,33 @@ app.get('/activity/get/bylocation', async (req, res) => {
 
 })
 
+app.post('/comment/add', async (req, res) => {
+    const comment_collection = db.collection('comment')
+
+    let comment = req.body
+
+    const result = await comment_collection.insertOne(comment)
+
+    res.status(200).send("add sucess" + result);
+})
+
+app.get('/comment/get/byactivity', async (req, res) => {
+    const comment_collection = db.collection('comment')
+
+    let activityName = req.body.activityName
+
+    filter = { 'activityName' : activityName }
+
+    let results = []
+
+    let cursor = comment_collection.find(filter)
+
+    await cursor.forEach((item) => results.push(item))
+
+    res.status(200).send(results)
+
+})
+
 async function getLocationByName(name) {
     const location_collection = db.collection('location');
 
