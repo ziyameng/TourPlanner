@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const port = 12345
 
+// mongodb client 
 const { MongoClient } = require("mongodb")
 const uri = "mongodb://127.0.0.1"
 const client = new MongoClient(uri);
@@ -59,6 +60,7 @@ app.get('/', (req, res) => {
 
 */
 
+// clear all collections in db
 async function deleteAllDataInCollection() {
     const location_collection = db.collection('location')
     const activity_collection = db.collection('activity')
@@ -69,11 +71,13 @@ async function deleteAllDataInCollection() {
     await comment_collection.deleteMany({})
 }
 
+// call this api for clear db
 app.get('/', async (req, res) => {
     await deleteAllDataInCollection()
     res.send('clear collections')
   })
 
+// add location to db
 app.post('/location/add', async (req, res) => {
 
     const location_collection = db.collection('location');
@@ -90,6 +94,7 @@ app.post('/location/add', async (req, res) => {
     res.status(200).send("add sucess" + result);
 })
 
+// get all location from db
 app.get('/location/get/all', async (req, res) => {
     const location_collection = db.collection('location');
 
@@ -105,6 +110,7 @@ app.get('/location/get/all', async (req, res) => {
     res.status(200).send(results)
 })
 
+// get location by locationName
 app.get('/location/get/byname', async (req, res) => {
     const location_collection = db.collection('location');
 
@@ -115,6 +121,7 @@ app.get('/location/get/byname', async (req, res) => {
     else res.status(400).send("Error: No such location")
 })
 
+// add activity to db
 app.post('/activity/add', async (req, res) => {
     const activity_collection = db.collection('activity')
 
@@ -125,11 +132,13 @@ app.post('/activity/add', async (req, res) => {
     res.status(200).send("add sucess" + result);
 })
 
+// get all activities of location by the locationName
 app.get('/activity/get/bylocation', async (req, res) => {
     const activity_collection = db.collection('activity')
 
     let locationName = req.body.locationName
 
+    // condition to get data from db
     filter = { 'locationName' : locationName }
 
     let results = []
@@ -142,6 +151,7 @@ app.get('/activity/get/bylocation', async (req, res) => {
 
 })
 
+// add comment to db
 app.post('/comment/add', async (req, res) => {
     const comment_collection = db.collection('comment')
 
@@ -152,11 +162,13 @@ app.post('/comment/add', async (req, res) => {
     res.status(200).send("add sucess" + result);
 })
 
+// add all comments of activity by the activityName
 app.get('/comment/get/byactivity', async (req, res) => {
     const comment_collection = db.collection('comment')
 
     let activityName = req.body.activityName
 
+    // condition to get data from db
     filter = { 'activityName' : activityName }
 
     let results = []
@@ -169,6 +181,7 @@ app.get('/comment/get/byactivity', async (req, res) => {
 
 })
 
+// get single location by locationName from db
 async function getLocationByName(name) {
     const location_collection = db.collection('location');
 
