@@ -30,8 +30,17 @@ fetch("http://localhost:23843/user-locations")
   });
 
 function deleteActivity(a) {
-  let row = document.getElementById(a);
-  console.log("delete", a);
+  let id = a;
+  let row = document.getElementById(id);
+  console.log("delete", id);
 
+  fetch("http://localhost:23843/user-locations-delete",{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({postIdToDelete:id})
+        })
   row.remove();
 }

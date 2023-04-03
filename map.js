@@ -18,7 +18,7 @@ async function saveCustomLocation(event) {
   let activityType = document.getElementById("user-activity").value;
   let name = document.getElementById("activity-name").value;
   let description = document.getElementById("activity-description").value;
-  let postDate = new Date().toLocaleDateString('en-GB');
+  let postDate = new Date().toLocaleDateString("en-GB");
   let postId = "id" + Math.random().toString(20).slice(2);
 
   // Define the data to be sent to the backend server
@@ -55,6 +55,7 @@ async function addMarkers() {
   const activity = document.getElementById("activity").value;
 
   // Send request to OpenTripMap to get all locations based on search parameters
+  // Locations users can choose from based on OpenTripMap Places Catalog (OpenTripMap, 2023)
   const externalResponse = await fetch(
     `https://api.opentripmap.com/0.1/en/places/radius?radius=${radius}&lon=${lng}&lat=${lat}&kinds=${activity}&limit=20&apikey=${tripMapApiKey}`
   );
@@ -95,7 +96,7 @@ async function addMarkers() {
     }
 
     // Add marker from OpenTripMap to the map display
-    // OpenTripMap locations are displayed in red
+    // OpenTripMap locations are displayed in red, based on Mapbox documentation (Mapbox, 2023)
     marker = new mapboxgl.Marker({ color: "indianred" })
       .setLngLat(coordinates)
       .addTo(map)
@@ -130,7 +131,7 @@ async function addMarkers() {
 
     if (distance <= radiusKm) {
       // Add marker from users to the map display
-      // User locations are displayed in orange
+      // User locations are displayed in orange, based on Mapbox documentation (Mapbox, 2023)
       marker = new mapboxgl.Marker({ color: "darkorange" })
         .setLngLat(coordinates)
         .addTo(map)
@@ -161,7 +162,7 @@ function distanceCoordinatesKm(lat1, lon1, lat2, lon2) {
 }
 
 // Function for converting degrees to radians
-// Function for these calculations found in external source (W3Resources, 2022)
+// Function for these calculations found in external source (W3Resource, 2022)
 function deg2rad(deg) {
   return deg * (Math.PI / 180);
 }
