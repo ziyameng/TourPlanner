@@ -59,8 +59,7 @@ app.get("/itinerary.css", function (req, res) {
   res.sendFile(__dirname + "/itinerary.css");
 });
 
-
-// Endpoint to get the emojitar components
+// Endpoint to get the user locations
 app.get("/user-locations", (req, res) => {
   res.send(customLocations);
 });
@@ -77,20 +76,19 @@ app.post("/user-locations", function (req, res) {
 });
 
 // To delete any custom location data from itineary page
-app.post("/user-locations-delete", function (req, res){
+app.post("/user-locations-delete", function (req, res) {
   let deleteId = req.body;
-  
+
   console.log("delete id: ", deleteId.postIdToDelete);
-  let matchId= deleteId.postIdToDelete
-  for (let i in customLocations){
-    if (customLocations[i].id === matchId){
+  let matchId = deleteId.postIdToDelete;
+  for (let i in customLocations) {
+    if (customLocations[i].id === matchId) {
       customLocations.splice(i, 1);
-    }
-    else{
+    } else {
       continue;
     }
   }
-})
+});
 
 // Instruct server to listen on port and log out a message, to know program is running as intended
 app.listen(API_PORT, () => {
