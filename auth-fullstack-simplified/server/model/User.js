@@ -10,11 +10,6 @@ const UserSchema = new Mongoose.Schema({
     minlength: 10,
     required: true,
   },
-  role: {
-    type: String,
-    default: "Basic",
-    required: true,
-  },
 });
 
 const User = Mongoose.model("user", UserSchema);
