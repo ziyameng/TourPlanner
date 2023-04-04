@@ -7,8 +7,14 @@
 // Cors is imported to allow requests to different domain
 var express = require("express");
 var cors = require("cors");
-var mongoose = require("mongoose");
+// var mongoose = require("mongoose");
 var app = express();
+
+// Connect database through mongodb client 
+const { MongoClient } = require("mongodb")
+const uri = "mongodb://127.0.0.1"
+const client = new MongoClient(uri);
+const db = client.db('default')
 
 // Set up middleware functions in Express to handle incoming requests
 app.use(express.urlencoded({ extended: true })); // Allow parsing of extended syntax
@@ -60,16 +66,28 @@ app.get("/itinerary.css", function (req, res) {
 });
 
 // Endpoint to get the user locations
-app.get("/user-locations", (req, res) => {
-  res.send(customLocations);
+app.get("/user-locations", async (req, res) => {
+  // res.send(customLocations);
+
+  const location_collection = db.collection('location');
+  let results = []
+
+  let cursor = location_collection.find({})
+
+  await cursor.forEach((item) => results.push(item))
+
+  res.status(200).send(results)
 });
 
 // ======== Backend endpoints ========
 // Endpoint to receive custom locations data from frontend
-app.post("/user-locations", function (req, res) {
+app.post("/user-locations", async function (req, res) {
+  const location_collection = db.collection('location');
   const customLocation = req.body;
 
-  customLocations.push(customLocation);
+  // customLocations.push(customLocation);
+  await location_collection.insertOne(customLocation)
+
   res
     .status(200)
     .json({ success: true, message: `Added Location ${customLocation.name}` });
@@ -77,18 +95,39 @@ app.post("/user-locations", function (req, res) {
 
 // To delete any custom location data from itineary page
 app.post("/user-locations-delete", function (req, res) {
+  const location_collection = db.collection('location');
   let deleteId = req.body;
 
   console.log("delete id: ", deleteId.postIdToDelete);
   let matchId = deleteId.postIdToDelete;
-  for (let i in customLocations) {
+
+  location_collection.deleteOne({ 'id' : matchId })
+  /*for (let i in customLocations) {
     if (customLocations[i].id === matchId) {
       customLocations.splice(i, 1);
     } else {
       continue;
     }
-  }
+  }*/
 });
+
+// clear all collections in db (for test)
+async function deleteAllDataInCollection() {
+  const location_collection = db.collection('location')
+  const activity_collection = db.collection('activity')
+  const comment_collection = db.collection('comment')
+
+  await location_collection.deleteMany({})
+  await activity_collection.deleteMany({})
+  await comment_collection.deleteMany({})
+}
+
+// call this api for clear db (for test)
+app.get('/cleardb', async (req, res) => {
+  await deleteAllDataInCollection()
+  res.send('clear collections')
+})
+
 
 // Instruct server to listen on port and log out a message, to know program is running as intended
 app.listen(API_PORT, () => {
