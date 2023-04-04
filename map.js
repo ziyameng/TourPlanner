@@ -101,7 +101,7 @@ async function addMarkers() {
       .setLngLat(coordinates)
       .addTo(map)
       .setPopup(
-        new mapboxgl.Popup().setHTML(`<h3>${name}</h3><p>${description}`)
+        new mapboxgl.Popup().setHTML(`<h3>${name}</h3><p>${description}</p>`)
       );
     markers.push(marker);
   }
@@ -136,7 +136,7 @@ async function addMarkers() {
         .setLngLat(coordinates)
         .addTo(map)
         .setPopup(
-          new mapboxgl.Popup().setHTML(`<h3>${name}</h3><p>${description}`)
+          new mapboxgl.Popup().setHTML(`<h3>${name}</h3><p>${description}</p><button name="${location.id}" onclick="activityDetail(this.name)">Detail</button>`)
         );
       markers.push(marker);
     }
@@ -165,4 +165,9 @@ function distanceCoordinatesKm(lat1, lon1, lat2, lon2) {
 // Function for these calculations found in external source (W3Resource, 2022)
 function deg2rad(deg) {
   return deg * (Math.PI / 180);
+}
+
+
+function activityDetail(location_id) {
+  alert(location_id)
 }
