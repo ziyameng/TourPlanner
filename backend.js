@@ -36,8 +36,8 @@ app.get("/", function (req, res) {
 });
 
 // Linked itinerary page to itinerary.html
-app.get("/itinerary", function (req, res) {
-  res.sendFile(__dirname + "/itinerary.html");
+app.get("/myPage", function (req, res) {
+  res.sendFile(__dirname + "/myPage.html");
 });
 
 // Added endpoint to link to frontend.js from server
@@ -51,18 +51,18 @@ app.get("/style.css", function (req, res) {
 });
 
 // Linked to itinerary.html
-app.get("/itinerary.html", function (req, res) {
-  res.sendFile(__dirname + "/itinerary.html");
+app.get("/myPage.html", function (req, res) {
+  res.sendFile(__dirname + "/myPage.html");
 });
 
 // Added endpoint to link to itinerary.js from server
-app.get("/itinerary.js", function (req, res) {
-  res.sendFile(__dirname + "/itinerary.js");
+app.get("/myPage.js", function (req, res) {
+  res.sendFile(__dirname + "/myPage.js");
 });
 
 // Added endpoint to link to itinerary.css from server
-app.get("/itinerary.css", function (req, res) {
-  res.sendFile(__dirname + "/itinerary.css");
+app.get("/myPage.css", function (req, res) {
+  res.sendFile(__dirname + "/myPage.css");
 });
 
 // Endpoint to get the user locations
@@ -93,7 +93,7 @@ app.post("/user-locations", async function (req, res) {
     .json({ success: true, message: `Added Location ${customLocation.name}` });
 });
 
-// To delete any custom location data from itineary page
+// To delete any custom location data from myPage page
 app.post("/user-locations-delete", function (req, res) {
   const location_collection = db.collection('location');
   let deleteId = req.body;
