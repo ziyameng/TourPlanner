@@ -137,3 +137,19 @@ exports.deleteUser = async (req, res, next) => {
         .json({ message: "An error occured", error: error.message });
     });
 };
+
+exports.getUsers = async (req, res, next) => {
+  await User.find({})
+    .then((user) => {
+      const userFunction = user.map((user) => {
+        const container = {};
+        container.username = user.username;
+        container.role = user.role;
+        return container;
+      });
+      res.status(200).json({ user: userFunction });
+    })
+    .catch((err) =>
+      res.status(401).json({ message: "not successful", error: err.message })
+    );
+};
