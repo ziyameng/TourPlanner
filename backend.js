@@ -65,6 +65,28 @@ app.get("/itinerary.css", function (req, res) {
   res.sendFile(__dirname + "/itinerary.css");
 });
 
+app.get("/user-comments/:LOCATION_ID", async (req, res) => {
+  const comment_collection = db.collection('comment')
+
+  let results = []
+
+  let cursor = comment_collection.find({ 'location_id' : req.params.LOCATION_ID })
+
+  await cursor.forEach((item) => results.push(item))
+
+  res.status(200).send(results)
+})
+
+app.post("/user-comments", async (req, res) => {
+  const comment_collection = db.collection('comment')
+
+  let comment = req.body
+
+  let results = await comment_collection.insertOne(comment)
+
+  res.status(200).send('Add comment' + comment)
+})
+
 // Endpoint to get the user locations
 app.get("/user-locations", async (req, res) => {
   // res.send(customLocations);
@@ -78,6 +100,23 @@ app.get("/user-locations", async (req, res) => {
 
   res.status(200).send(results)
 });
+
+// Endpoint to get the user locations by location_id
+app.get("/user-locations/:LOCATION_ID", async (req, res) => {
+  // res.send(customLocations);
+
+  const location_collection = db.collection('location');
+  let results = []
+
+  let cursor = location_collection.find({ 'id' : req.params.LOCATION_ID })
+
+  await cursor.forEach((item) => results.push(item))
+
+  if(results.length == 0)
+    res.status(400).send("Failed to find the location")
+  else 
+    res.status(200).send(results[0])
+})
 
 // ======== Backend endpoints ========
 // Endpoint to receive custom locations data from frontend

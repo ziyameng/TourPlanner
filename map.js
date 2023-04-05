@@ -168,6 +168,58 @@ function deg2rad(deg) {
 }
 
 
-function activityDetail(location_id) {
-  alert(location_id)
+async function activityDetail(location_id) {
+  document.getElementById("activity_dialog").style.display = "block"
+  const response = await fetch(`http://localhost:23843/user-locations/${location_id}`);
+  const data = await response.json();
+  document.getElementById("activity_name").innerHTML = data.name
+  document.getElementById("activity_description").innerHTML = data.description
+
+  document.getElementById("submit_comment_btn").name = location_id
+
+  await refreshActivityDetail(location_id)
+}
+
+
+async function submit_comment(location_id) {
+  let comment = document.getElementById("activity_comment_input").value
+  let rating = document.getElementById('activity_comment_rating').value
+
+  await fetch(`http://localhost:23843/user-comments`, {
+    method: "POST",
+    body: JSON.stringify({
+      'location_id' : location_id,
+      'comment' : comment,
+      'rating' : rating
+    }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  await refreshActivityDetail(location_id)
+
+}
+
+async function refreshActivityDetail(location_id) {
+  let results = await fetch(`http://localhost:23843/user-comments/${location_id}`);
+  let comments = await results.json()
+  console.log('refresh activity detail', comments)
+  let html = ""
+  comments.forEach((comment) => {
+    star_num = parseInt(comment['rating'])
+    let star_str = ""
+    for(let j = 1; j <= 5; j++, star_num--) {
+        if(star_num > 0)
+            star_str += "&starf;"
+        else 
+            star_str += "&star;"
+    }
+    html += '<div class=comment_box>' + star_str + '<br><label>' + comment['comment'] + '</label></div>'
+  })
+  document.getElementById("activity_comments").innerHTML = html
+}
+
+function closeActivityDetail() {
+  document.getElementById("activity_dialog").style.display = "none"
 }
