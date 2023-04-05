@@ -44,6 +44,7 @@ exports.register = async (req, res, next) => {
   });
 };
 
+//Login Function
 exports.login = async (req, res, next) => {
   const { username, password } = req.body;
   if (!username || !password) {
@@ -86,70 +87,4 @@ exports.login = async (req, res, next) => {
       error: error.message,
     });
   }
-};
-
-exports.update = async (req, res, next) => {
-  const { role, id } = req.body;
-
-  if (role && id) {
-    if (role === "admin") {
-      try {
-        const user = await User.findById(id);
-
-        if (user.role !== "admin") {
-          user.role = role;
-
-          try {
-            await user.save();
-            res.status(201).json({ message: "User update successful", user });
-          } catch (err) {
-            res.status(400).json({ message: "error occured" });
-            process.exit(1);
-          }
-        } else {
-          res.status(400).json({ message: "User is already an Admin" });
-        }
-      } catch (error) {
-        res
-          .status(400)
-          .json({ message: "error occured", error: error.message });
-      }
-    } else {
-      res.status(400).json({ message: "Role is not admin" });
-    }
-  } else {
-    res
-      .status(400)
-      .json({ message: "Role or id is not present or not provided" });
-  }
-};
-
-exports.deleteUser = async (req, res, next) => {
-  const { id } = req.body;
-  await User.findById(id)
-    .then((user) => user.deleteOne())
-    .then((user) =>
-      res.status(201).json({ message: "User successfully deleted", user })
-    )
-    .catch((error) => {
-      res
-        .status(400)
-        .json({ message: "An error occured", error: error.message });
-    });
-};
-
-exports.getUsers = async (req, res, next) => {
-  await User.find({})
-    .then((user) => {
-      const userFunction = user.map((user) => {
-        const container = {};
-        container.username = user.username;
-        container.role = user.role;
-        return container;
-      });
-      res.status(200).json({ user: userFunction });
-    })
-    .catch((err) =>
-      res.status(401).json({ message: "not successful", error: err.message })
-    );
 };
