@@ -1,4 +1,3 @@
-
 //Activity/Location Data Structure
 const activityArray = [
     {activityName: "Activity One", description: "it was okay", age: "All", category: "accomodations", price: 10, latitude: 17, longitude: 10, postDate: "date here"}

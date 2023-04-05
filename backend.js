@@ -27,7 +27,7 @@ const API_PORT = 23843;
 
 // Defining variable to store created locations
 // For testing, will use database later
-let customLocations = [];
+//let customLocations = [];
 
 // ======== Frontend endpoints ========
 // Linked homepage to frontend.html

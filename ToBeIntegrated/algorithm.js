@@ -286,26 +286,6 @@ async function saveCustomLocation(event) {
 //Get Functions
 //
 
-//Calculates the distance between two points "as the crow flies".
-//Source: http://www.movable-type.co.uk/scripts/latlong.html
-function getDistance(latitude1, longitude1, latitude2, longitude2) {
-    const R = 6371e3 //Metres
-    const phi1 = latitude1 * Math.PI / 180;
-    const phi2 = latitude2 * Math.PI / 180;
-    const lambda1 = longitude1 * Math.PI / 180;
-    const lambda2 = longitude2 * Math.PI / 180;
-
-    const deltaPhi = phi2 - phi1;
-    const deltaLambda = lambda2 - lambda1;
-
-    const a = (Math.sin(deltaPhi / 2) * Math.sin(deltaPhi / 2)) + ((Math.cos(phi1) * Math.cos(phi2)) * (Math.sin(deltaLambda / 2) * Math.sin(deltaLambda / 2)));
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-    const d = R * c;
-
-    return d;
-}
-
 //Source: https://stackoverflow.com/questions/1230233/how-to-find-the-sum-of-an-array-of-numbers
 function getAverageRating(activityName) {
     let selectedRatings = [];
@@ -323,4 +303,3 @@ function getAverageRating(activityName) {
 
     return averageRating;
 }
-
