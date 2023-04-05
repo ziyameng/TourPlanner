@@ -12,7 +12,8 @@ var app = express();
 
 // Connect database through mongodb client
 const { MongoClient } = require("mongodb");
-const uri = "mongodb://127.0.0.1";
+// const uri = "mongodb://127.0.0.1";
+const uri = "mongodb+srv://Ziya:Ziya12345.@nodejs.v1dwrb3.mongodb.net/?retryWrites=true&w=majority"
 const client = new MongoClient(uri);
 const db = client.db("default");
 
