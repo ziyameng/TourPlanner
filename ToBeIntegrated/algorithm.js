@@ -1,16 +1,18 @@
+//TEST ACTIVITY DATA
 const activityArray = [
-    { activityName: "Activity One", description: "it was okay", age: "All", category: "accomodations", price: 10, latitude: 17, longitude: 10 },
-    { activityName: "Activity Two", description: "eh", age: "All", category: "accomodations", price: 10, latitude: 17, longitude: 10 },
-    { activityName: "Activity Three", description: "no too bad", age: "Elder", category: "accomodations", price: 10, latitude: 17, longitude: 10 },
-    { activityName: "Activity Four", description: "Would go again", age: "Young", category: "accomodations", price: 10, latitude: 17, longitude: 10 },
-    { activityName: "Activity Five", description: "Never again", age: "Adult", category: "accomodations", price: 10, latitude: 17, longitude: 10 },
-    { activityName: "Activity Six", description: "I'm tired", age: "Adult", category: "accomodations", price: 10, latitude: 17, longitude: 10 },
-    { activityName: "Activity Seven", description: "One giant potato", age: "Adult", category: "accomodations", price: 10, latitude: 17, longitude: 10 },
-    { activityName: "Activity Eight", description: "CS5003 Flashbacks", age: "Young", category: "accomodations", price: 10, latitude: 17, longitude: 10 },
-    { activityName: "Activity Nine", description: "Pork pie", age: "Elder", category: "accomodations", price: 10, latitude: 17, longitude: 10 },
-    { activityName: "Activity Ten", description: "blah blah blah", age: "All", category: "accomodations", price: 10, latitude: 17, longitude: 10 },
+    { activityName: "Activity One", description: "it was okay", age: "All", category: "accomodations", price: 1, latitude: 17, longitude: 10 },
+    { activityName: "Activity Two", description: "eh", age: "All", category: "accomodations", price: 8, latitude: 17, longitude: 10 },
+    { activityName: "Activity Three", description: "no too bad", age: "Elder", category: "accomodations", price: 20, latitude: 17, longitude: 10 },
+    { activityName: "Activity Four", description: "Would go again", age: "Young", category: "accomodations", price: 13, latitude: 17, longitude: 10 },
+    { activityName: "Activity Five", description: "Never again", age: "Adult", category: "accomodations", price: 7, latitude: 17, longitude: 10 },
+    { activityName: "Activity Six", description: "I'm tired", age: "Adult", category: "accomodations", price: 5, latitude: 17, longitude: 10 },
+    { activityName: "Activity Seven", description: "One giant potato", age: "Adult", category: "accomodations", price: 3, latitude: 17, longitude: 10 },
+    { activityName: "Activity Eight", description: "CS5003 Flashbacks", age: "Young", category: "accomodations", price: 2, latitude: 17, longitude: 10 },
+    { activityName: "Activity Nine", description: "Pork pie", age: "Elder", category: "accomodations", price: 4, latitude: 17, longitude: 10 },
+    { activityName: "Activity Ten", description: "blah blah blah", age: "All", category: "accomodations", price: 75, latitude: 17, longitude: 10 },
 ];
 
+//TEST REVIEW DATA
 const reviewArray = [
     { parentActivityName: "Activity One", author: "Samuel", rating: "1", comment: "It was not very good." },
     { parentActivityName: "Activity One", author: "Bob", rating: "4", comment: "I Liked it." },
@@ -34,14 +36,16 @@ function PNAAlgorithm(viewedActivity) {
         potentialActivities = potentialActivities.filter(activity => activity.activityName == maxRatedActivity.activityName);
     }
 
-    return recommendedActivities;
+    displayRecommendations(recommendedActivities);
 }
 
 //Popular Near this Location
+//Given coordinates this function will recommend activities a number of activities that are within the given range.
 //Source: https://jsfiddle.net/45c5r246/34/
 function PNLAlgorithm(latitude, longitude) {
     let recommendedActivityCount = 3;
-    let potentialActivities = filterArea(latitude, longitude, "30000");
+    let range = 30000;
+    let potentialActivities = filterArea(latitude, longitude, range);
     let recommendedActivities = [];
 
     //Source: https://stackoverflow.com/questions/10024866/remove-object-from-array-using-javascript
@@ -53,10 +57,12 @@ function PNLAlgorithm(latitude, longitude) {
         potentialActivities = potentialActivities.filter(activity => activity.activityName == maxRatedActivity.activityName);
     }
 
-    return recommendedActivities;
+    displayRecommendations(recommendedActivities);
 }
 
+//Displays the recommendations.
 function displayRecommendations(recommendedActivities) {
+    //Empties the recommendation result sections if it contains anything.
     let reccommendationResults = document.getElementById("reccommendationResults");
     reccommendationResults.innerHTML = "";
 
@@ -99,25 +105,24 @@ function displayRecommendations(recommendedActivities) {
     }
 }
 
+//Filters all activities by age, category and price. This is called by the filter form in the HTML.
 function filterActivities() {
-    let ageInput = document.getElementById("ageFilterInput").value;
-    let categoryInput = document.getElementById("categoryFilterInput").value;
-    let lowerPriceInput = document.getElementById("lowerPriceFilterInput").value;
-    let upperPriceInput = document.getElementById("upperPriceFilterInput").value;
-
     let filterResults = structuredClone(activityArray);
 
-    filterResults = filterAge(filterResults, ageInput);
-    filterResults = filterCategory(filterResults, categoryInput);
-    filterResults = filterPrice(filterResults, lowerPriceInput, upperPriceInput);
+    filterResults = filterAge(filterResults, document.getElementById("ageFilterInput").value);
+    filterResults = filterCategory(filterResults, document.getElementById("categoryFilterInput").value);
+    filterResults = filterPrice(filterResults, document.getElementById("lowerPriceFilterInput").value, document.getElementById("upperPriceFilterInput").value);
 
     displayFilteredActivities(filterResults);
 }
 
+//Displays the filtered activities.
 function displayFilteredActivities(filteredActivities) {
+    //Empties the filter result sections if it contains anything.
     let filterResults = document.getElementById("filterResults");
     filterResults.innerHTML = "";
 
+    //Creates a div for each activity, and fills it with divs containing its various properties.
     for (let i = 0; i < filteredActivities.length; i++) {
         var resultPanel = document.createElement("div");
         resultPanel.className = "resultPanel";
@@ -189,6 +194,7 @@ function filterArea(latitude, longitude, range) {
     }
 }
 
+//Filters activities based on the provided age category.
 function filterAge(potentialActivities, givenage) {
     let filteredActivities = [];
 
@@ -204,6 +210,7 @@ function filterAge(potentialActivities, givenage) {
     }
 }
 
+//Filters activities based on the provided category.
 function filterCategory(potentialActivities, givenCategory) {
     let filteredActivities = [];
 
@@ -220,6 +227,7 @@ function filterCategory(potentialActivities, givenCategory) {
     return filteredActivities;
 }
 
+//Filters activities based on the given price range.
 function filterPrice(potentialActivities, givenPriceLower, givenPriceUpper) {
     let filteredActivities = [];
 
@@ -274,31 +282,9 @@ async function saveCustomLocation(event) {
 
 
 
-
-
 //
 //Get Functions
 //
-
-//Calculates the distance between two points "as the crow flies".
-//Source: http://www.movable-type.co.uk/scripts/latlong.html
-function getDistance(latitude1, longitude1, latitude2, longitude2) {
-    const R = 6371e3 //Metres
-    const phi1 = latitude1 * Math.PI / 180;
-    const phi2 = latitude2 * Math.PI / 180;
-    const lambda1 = longitude1 * Math.PI / 180;
-    const lambda2 = longitude2 * Math.PI / 180;
-
-    const deltaPhi = phi2 - phi1;
-    const deltaLambda = lambda2 - lambda1;
-
-    const a = (Math.sin(deltaPhi / 2) * Math.sin(deltaPhi / 2)) + ((Math.cos(phi1) * Math.cos(phi2)) * (Math.sin(deltaLambda / 2) * Math.sin(deltaLambda / 2)));
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-    const d = R * c;
-
-    return d;
-}
 
 //Source: https://stackoverflow.com/questions/1230233/how-to-find-the-sum-of-an-array-of-numbers
 function getAverageRating(activityName) {
@@ -317,4 +303,3 @@ function getAverageRating(activityName) {
 
     return averageRating;
 }
-
