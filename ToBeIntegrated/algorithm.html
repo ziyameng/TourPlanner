@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE-edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Algorithm Prototype</title>
+    <link rel="stylesheet" href="algorithm.css">
+</head>
+
+
+
+<body>
+    <div class="filterForm" id="filterSearch"> Filter Search:
+        <div>
+            <div class="filterSettings">
+                <label for="ageFilterInput">Age Category: </label>
+                <select id="ageFilterInput">
+                    <option value="Young">Young</option>
+                    <option value="Adult">Adult</option>
+                    <option value="Elder">Elder</option>
+                    <option value="All">All</option>
+                </select>
+            </div>
+            <div class="filterSettings">
+                <label for="categoryFilterInput">Activity Category: </label>
+                <select id="categoryFilterInput">
+                    <option value="accomodations">Accomodations</option>
+                    <option value="bars">Bars</option>
+                    <option value="cafes">Cafes</option>
+                    <option value="churches">Churches</option>
+                    <option value="monuments_and_memorials">Monuments</option>
+                    <option value="cinemas">Movie Theaters</option>
+                    <option value="museums">Museums</option>
+                    <option value="nightclubs">Night Clubs</option>
+                    <option value="gardens_and_parks">Parks</option>
+                    <option value="restaurant">Restaurants</option>
+                    <option value="malls">Shopping Malls</option>
+                    <option value="sport">Sport</option>
+                    <option value="stadiums">Stadiums</option>
+                    <option value="tourist_object">Tourist Attraction</option>
+                    <option value="All">All</option>
+                </select>
+            </div>
+            <div class="filterSettings">
+                <label for="lowerPriceFilterInput">Minimum Price (£):</label>
+                <input type="text" id="lowerPriceFilterInput" placeholder="Enter Minimum Price (£)">
+            </div>
+            <div class="filterSettings">
+                <label for="upperPriceFilterInput">Maximum Price (£):</label>
+                <input type="text" id="upperPriceFilterInput" placeholder="Enter Maximum Price (£)">
+            </div>
+            <div class="filterSettings">
+                <button id="filterButton" onclick="filterActivities()">Filter</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="panelDisplay" id="filterResults"> Filter Results:</div>
+
+    <div class="panelDisplay" id="reccommendationResults"> Reccomendation Results:</div>
+
+    <div class="submissionForm"> Activity Submission Form:
+        <div>
+            <div class="submissionSettings">
+                <label for="nameSubmissionInput">Name of Activity:</label>
+                <input type="text" id="nameSubmissionInput" placeholder="Enter Activity Name"/>
+            </div>
+            <div class="submissionSettings">
+                <label for="latitudeSubmissionInput">Add Latitude:</label>
+                <input type="text" id="latitudeSubmissionInput" placeholder="Enter Latitude"/>
+            </div>
+            <div class="submissionSettings">
+                <label for="longitudeSubmissionInput">Add Longitude:</label>
+                <input type="text" id="longitudeSubmissionInput" placeholder="Enter Longitude"/>
+            </div>
+            <div class="submissionSettings">
+                <label for="descriptionSubmissionInput">Description of Activity:</label>
+                <input type="text" id="descriptionSubmissionInput" placeholder="Enter Description of Activity"/>
+            </div>
+            <div class="submissionSettings">
+                <label for="ageSubmissionInput">Age Category: </label>
+                <select id="ageSubmissionInput">
+                    <option value="Young">Young</option>
+                    <option value="Adult">Adult</option>
+                    <option value="Elder">Elder</option>
+                    <option value="All">All</option>
+                </select>
+            </div>
+            <div class="submissionSettings">
+                <label for="categorySubmissionInput">Activity Category: </label>
+                <select id="categorySubmissionInput">
+                    <option value="accomodations">Accomodations</option>
+                    <option value="bars">Bars</option>
+                    <option value="cafes">Cafes</option>
+                    <option value="churches">Churches</option>
+                    <option value="monuments_and_memorials">Monuments</option>
+                    <option value="cinemas">Movie Theaters</option>
+                    <option value="museums">Museums</option>
+                    <option value="nightclubs">Night Clubs</option>
+                    <option value="gardens_and_parks">Parks</option>
+                    <option value="restaurant">Restaurants</option>
+                    <option value="malls">Shopping Malls</option>
+                    <option value="sport">Sport</option>
+                    <option value="stadiums">Stadiums</option>
+                    <option value="tourist_object">Tourist Attraction</option>
+                    <option value="All">All</option>
+                </select>
+            </div>
+            <div class="submissionSettings">
+                <label for="priceSubmissionInput">Average Price (£):</label>
+                <input type="text" id="priceSubmissionInput" placeholder="Enter Average Price (£)">
+            </div>
+            <div class="submissionSettings">
+                <button id="SubmissionButton" onclick="saveCustomLocation()">Submit New Location</button>
+            </div>
+        </div>
+    </div>
+    <script src="algorithm.js"></script>
+</body>
+
+</html>
