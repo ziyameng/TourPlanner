@@ -7,6 +7,7 @@
 const activityArray = [
   {
     activityName: "Activity One",
+    creator: "Samuel",
     description: "it was okay",
     age: "All",
     category: "accomodations",

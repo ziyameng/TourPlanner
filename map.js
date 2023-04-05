@@ -6,29 +6,32 @@
 // Defining needed variables for user interaction with the map
 const markers = [];
 const mapContainer = document.getElementById("map");
-const tripMapApiKey =
-  "5ae2e3f221c38a28845f05b6327f823bbe3325268803cc58e306d9ef";
+const tripMapApiKey = "5ae2e3f221c38a28845f05b6327f823bbe3325268803cc58e306d9ef";
 
 // Let users submit their own activities to the application
 // Store and process these so they can be displayed in the map when called
 async function saveCustomLocation(event) {
-  let lat = parseFloat(document.getElementById("user-lat").value);
-  let lng = parseFloat(document.getElementById("user-lng").value);
-  let coordinates = [lng, lat];
-  let activityType = document.getElementById("user-activity").value;
-  let name = document.getElementById("activity-name").value;
-  let description = document.getElementById("activity-description").value;
+  let activityName = document.getElementById("nameSubmissionInput").value;
+  let creator = "TEMP"; //FIX NEEDED
+  let description = document.getElementById("descriptionSubmissionInput").value;
+  let age = document.getElementById("ageSubmissionInput").value;
+  let category = document.getElementById("categorySubmissionInput").value;
+  let price = document.getElementById("priceSubmissionInput").value;
+  let latitude = document.getElementById("latitudeSubmissionInput").value;
+  let longitude = document.getElementById("longitudeSubmissionInput").value;
   let postDate = new Date().toLocaleDateString("en-GB");
-  let postId = "id" + Math.random().toString(20).slice(2);
 
   // Define the data to be sent to the backend server
   const customLocation = {
-    id: postId,
-    coordinates: coordinates,
-    activity: activityType,
-    name: name,
+    activityName: activityName,
+    creator: creator,
     description: description,
-    date: postDate,
+    age: age,
+    category: category,
+    price: price,
+    latitude: latitude,
+    longitude: longitude,
+    postDate: postDate,
   };
 
   // Send the data for the newly added activity to the backend to be saved
@@ -62,7 +65,7 @@ async function addMarkers() {
   const mapData = await externalResponse.json();
   console.log("Map Data: ", mapData);
 
-  // Send request to backend to get all locations based on search parameters
+  // Send request to backend to get all locations.
   const userResponse = await fetch("http://localhost:23843/user-locations");
   const userData = await userResponse.json();
   console.log("User Data: ", userData);
@@ -228,4 +231,303 @@ async function refreshActivityDetail(location_id) {
 
 function closeActivityDetail() {
   document.getElementById("activity_dialog").style.display = "none";
+}
+
+
+//Filter and Submission Code:
+
+//Popular Near this Activity
+//Source: https://jsfiddle.net/45c5r246/34/
+function PNAAlgorithm(viewedActivity) {
+  let recommendedActivityCount = 3;
+  let potentialActivities = activityVicinity(viewedActivity, "30000");
+  let recommendedActivities = [];
+
+  //Source: https://stackoverflow.com/questions/10024866/remove-object-from-array-using-javascript
+  for (let i = 0; i < recommendedActivityCount; i++) {
+    let maxRating = Math.max.apply(
+      Math,
+      potentialActivities.map(function (activity) {
+        return getAverageRating(activity);
+      })
+    );
+    let maxRatedActivity = potentialActivities.find(function (activity) {
+      return getAverageRating(activity) == maxRating;
+    });
+
+    recommendedActivities.push(maxRatedActivity);
+    potentialActivities = potentialActivities.filter(
+      (activity) => activity.activityName == maxRatedActivity.activityName
+    );
+  }
+
+  displayRecommendations(recommendedActivities);
+}
+
+//Popular Near this Location
+//Given coordinates this function will recommend activities a number of activities that are within the given range.
+//Source: https://jsfiddle.net/45c5r246/34/
+function PNLAlgorithm(latitude, longitude) {
+  let recommendedActivityCount = 3;
+  let range = 30000;
+  let potentialActivities = filterArea(latitude, longitude, range);
+  let recommendedActivities = [];
+
+  //Source: https://stackoverflow.com/questions/10024866/remove-object-from-array-using-javascript
+  for (let i = 0; i < recommendedActivityCount; i++) {
+    let maxRating = Math.max.apply(
+      Math,
+      potentialActivities.map(function (activity) {
+        return getAverageRating(activity);
+      })
+    );
+    let maxRatedActivity = potentialActivities.find(function (activity) {
+      return getAverageRating(activity) == maxRating;
+    });
+
+    recommendedActivities.push(maxRatedActivity);
+    potentialActivities = potentialActivities.filter(
+      (activity) => activity.activityName == maxRatedActivity.activityName
+    );
+  }
+
+  displayRecommendations(recommendedActivities);
+}
+
+//Displays the recommendations.
+function displayRecommendations(recommendedActivities) {
+  //Empties the recommendation result sections if it contains anything.
+  let reccommendationResults = document.getElementById(
+    "reccommendationResults"
+  );
+  reccommendationResults.innerHTML = "";
+
+  for (let i = 0; i < recommendedActivities.length; i++) {
+    var resultPanel = document.createElement("div");
+    resultPanel.className = "resultPanel";
+
+    var resultActivityName = document.createElement("div");
+    resultActivityName.id = "resultActivityName";
+    resultPanel.className = "detailSubPanel";
+    resultActivityName.innerHTML =
+      "Activity: " + recommendedActivities[i].activityName;
+
+    var resultActivityDescription = document.createElement("div");
+    resultActivityDescription.id = "resultActivityDescription";
+    resultPanel.className = "detailSubPanel";
+    resultActivityDescription.innerHTML =
+      "Description: " + recommendedActivities[i].Description;
+
+    var resultActivityAge = document.createElement("div");
+    resultActivityAge.id = "resultActivityAge";
+    resultPanel.className = "detailSubPanel";
+    resultActivityAge.innerHTML =
+      "Appropriate Age: " + recommendedActivities[i].age;
+
+    var resultActivityCategory = document.createElement("div");
+    resultActivityCategory.id = "resultActivityCategory";
+    resultPanel.className = "detailSubPanel";
+    resultActivityCategory.innerHTML =
+      "Category: " + recommendedActivities[i].category;
+
+    var resultActivityPrice = document.createElement("div");
+    resultActivityPrice.id = "resultActivityPrice";
+    resultPanel.className = "detailSubPanel";
+    resultActivityPrice.innerHTML =
+      "Average Price: £" + recommendedActivities[i].price;
+
+    resultPanel.appendChild(resultActivityName);
+    resultPanel.appendChild(resultActivityDescription);
+    resultPanel.appendChild(resultActivityAge);
+    resultPanel.appendChild(resultActivityCategory);
+    resultPanel.appendChild(resultActivityPrice);
+
+    reccommendationResults.appendChild(resultPanel);
+  }
+}
+
+//Filters all activities by age, category and price. This is called by the filter form in the HTML.
+async function filterActivities() {
+  let filterResults = await getActivities();
+
+  filterResults = filterAge(
+    filterResults,
+    document.getElementById("ageFilterInput").value
+  );
+  filterResults = filterCategory(
+    filterResults,
+    document.getElementById("categoryFilterInput").value
+  );
+  filterResults = filterPrice(
+    filterResults,
+    document.getElementById("lowerPriceFilterInput").value,
+    document.getElementById("upperPriceFilterInput").value
+  );
+
+  console.log("Returning Filter Results:")
+  console.log(filterResults);
+  displayFilteredActivities(filterResults);
+}
+
+//Displays the filtered activities.
+function displayFilteredActivities(filteredActivities) {
+  console.log("Returning Filter Results from inside display function:")
+  console.log(filteredActivities);
+  //Empties the filter result sections if it contains anything.
+  let filterResults = document.getElementById("filterResults");
+  filterResults.innerHTML = "";
+
+  //Creates a div for each activity, and fills it with divs containing its various properties.
+  console.log(typeof filteredActivities);
+  console.log(filterActivities.length);
+  for (let i = 0; i < filteredActivities.length; i++) {
+    console.log("Ping")
+    console.log(filteredActivities[i]);
+    var resultPanel = document.createElement("div");
+    resultPanel.className = "resultPanel";
+
+    var resultActivityName = document.createElement("div");
+    resultActivityName.id = "resultActivityName";
+    resultPanel.className = "detailSubPanel";
+    resultActivityName.innerHTML =
+      "Activity: " + filteredActivities[i].activityName;
+
+    var resultActivityDescription = document.createElement("div");
+    resultActivityDescription.id = "resultActivityDescription";
+    resultPanel.className = "detailSubPanel";
+    resultActivityDescription.innerHTML =
+      "Description: " + filteredActivities[i].description;
+
+    var resultActivityAge = document.createElement("div");
+    resultActivityAge.id = "resultActivityAge";
+    resultPanel.className = "detailSubPanel";
+    resultActivityAge.innerHTML = "Age Category: " + filteredActivities[i].age;
+
+    var resultActivityCategory = document.createElement("div");
+    resultActivityCategory.id = "resultActivityCategory";
+    resultPanel.className = "detailSubPanel";
+    resultActivityCategory.innerHTML =
+      "Category: " + filteredActivities[i].category;
+
+    var resultActivityPrice = document.createElement("div");
+    resultActivityPrice.id = "resultActivityPrice";
+    resultPanel.className = "detailSubPanel";
+    resultActivityPrice.innerHTML =
+      "Average Price: £" + filteredActivities[i].price;
+
+    resultPanel.appendChild(resultActivityName);
+    resultPanel.appendChild(resultActivityDescription);
+    resultPanel.appendChild(resultActivityAge);
+    resultPanel.appendChild(resultActivityCategory);
+    resultPanel.appendChild(resultActivityPrice);
+
+    filterResults.appendChild(resultPanel);
+  }
+}
+
+//Filters activites to ones that exist near the given activity.
+async function activityVicinity(viewedActivity, range) {
+  let activities = await getActivities();
+  activities = activities.filter(
+    (activity) => activity.activityName == viewedActivity.activityName
+  );
+  let potentialActivities = [];
+
+  for (let i = 0; i < activities.length; i++) {
+    if (
+      getDistance(
+        activities[i].latitude,
+        activities[i].longitude,
+        viewedActivity.latitude,
+        viewedActivity.longitude
+      ) <= range
+    ) {
+      potentialActivities.push(activities[i]);
+    }
+  }
+
+  return potentialActivities;
+}
+
+//Filters activites to ones that exist near the given coordinates.
+async function filterArea(latitude, longitude, range) {
+  let activities = await getActivities();
+  let potentialActivities = [];
+
+  if (range == "All") {
+    return potentialActivities;
+  } else {
+    for (let i = 0; i < activities.length; i++) {
+      if (
+        getDistance(
+          activities[i].latitude,
+          activities[i].longitude,
+          latitude,
+          longitude
+        ) <= range
+      ) {
+        potentialActivities.push(activities[i]);
+      }
+    }
+    return potentialActivities;
+  }
+}
+
+//Filters activities based on the provided age category.
+function filterAge(potentialActivities, givenage) {
+  let filteredActivities = [];
+
+  if (givenage == "All") {
+    return potentialActivities;
+  } else {
+    for (let i = 0; i < potentialActivities.length; i++) {
+      if (potentialActivities[i].age == givenage) {
+        filteredActivities.push(potentialActivities[i]);
+      }
+    }
+    return filteredActivities;
+  }
+}
+
+//Filters activities based on the provided category.
+function filterCategory(potentialActivities, givenCategory) {
+  let filteredActivities = [];
+
+  if (givenCategory == "All") {
+    return potentialActivities;
+  } else {
+    for (let i = 0; i < potentialActivities.length; i++) {
+      if (potentialActivities[i].category == givenCategory) {
+        filteredActivities.push(potentialActivities[i]);
+      }
+    }
+  }
+
+  return filteredActivities;
+}
+
+//Filters activities based on the given price range.
+function filterPrice(potentialActivities, givenPriceLower, givenPriceUpper) {
+  let filteredActivities = [];
+
+  if ((givenPriceLower == "Any") | (givenPriceUpper == "Any")) {
+    return potentialActivities;
+  } else {
+    for (let i = 0; i < potentialActivities.length; i++) {
+      if (
+        potentialActivities[i].price >= givenPriceLower &&
+        potentialActivities[i].price <= givenPriceUpper
+      ) {
+        filteredActivities.push(potentialActivities[i]);
+      }
+    }
+  }
+
+  return filteredActivities;
+}
+
+async function getActivities() {
+  let response = await fetch("http://localhost:23843/user-locations");
+  let data = Object.values(await response.json());
+  return data;
 }
