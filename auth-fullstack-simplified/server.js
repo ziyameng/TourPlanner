@@ -1,3 +1,8 @@
+// Module code: CS5003
+// Module: Masters Programming Projects
+// Matriculation numbers: 220024877, 220033532, 220009855, 220033540, 220031591
+// Server Fullstack Authentication: Creating a Holiday Planner
+
 const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
@@ -5,7 +10,7 @@ const connectDB = require("./server/config/database");
 const { userAuth } = require("./server/middleware/auth");
 const app = express();
 
-//1)Autthentication
+//1)Authentication
 require("dotenv").config();
 
 app.use(express.json());

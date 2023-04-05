@@ -1,14 +1,14 @@
 // Module code: CS5003
 // Module: Masters Programming Projects
-// Matriculation number: 220024877, OTHER MATRICULATION NUMBERS
-// Creating a Holiday Planner
+// Matriculation numbers: 220024877, 220033532, 220009855, 220033540, 220031591
+// My Page: Creating a Holiday Planner
 
 // Send request to backend to get all locations based on search parameters
 fetch("http://localhost:23843/user-locations")
   .then((res) => res.json())
   .then((data) => {
     console.log(data);
-/*
+    /*
     let table = document.getElementById("myPageTable");
      
     for (let i in data){
@@ -34,13 +34,13 @@ function deleteActivity(a) {
   let row = document.getElementById(id);
   console.log("delete", id);
 
-  fetch("http://localhost:23843/user-locations-delete",{
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({postIdToDelete:id})
-        })
+  fetch("http://localhost:23843/user-locations-delete", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify({ postIdToDelete: id }),
+  });
   row.remove();
 }

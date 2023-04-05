@@ -1,23 +1,28 @@
+/* Module code: CS5003 */
+/* Module: Masters Programming Projects */
+/* Matriculation numbers: 220024877, 220033532, 220009855, 220033540, 220031591 */
+/* My Page: Creating a Holiday Planner */
+
 table {
-    font-family: Arial, Helvetica, sans-serif;
-    border: 1px solid black;
-    width: 100%;
+  font-family: Arial, Helvetica, sans-serif;
+  border: 1px solid black;
+  width: 100%;
 }
 table th {
-    padding-top: 12px;
-    padding-bottom: 12px;
-    text-align: left;
-    background-color:#135e96;
-    color: white;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #135e96;
+  color: white;
 }
-table tr:nth-child(even){
-    background-color: #f2f2f2;
+table tr:nth-child(even) {
+  background-color: #f2f2f2;
 }
 .deleteBtn {
-    width: 100%;
+  width: 100%;
 }
-.goBackBtn{
-    display:block;
-    margin: 0 auto;
-    width: 20%;
+.goBackBtn {
+  display: block;
+  margin: 0 auto;
+  width: 20%;
 }

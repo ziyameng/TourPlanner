@@ -1,7 +1,7 @@
 // Module code: CS5003
 // Module: Masters Programming Projects
-// Matriculation number: 220024877, OTHER MATRICULATION NUMBERS
-// Creating a Holiday Planner
+// Matriculation numbers: 220024877, 220033532, 220009855, 220033540, 220031591
+// Backend: Creating a Holiday Planner
 
 // Importing Node.js and Express modules needed
 // Cors is imported to allow requests to different domain
