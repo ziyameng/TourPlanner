@@ -13,7 +13,7 @@ const tripMapApiKey =
 // Store and process these so they can be displayed in the map when called
 async function saveCustomLocation(event) {
   let activityName = document.getElementById("nameSubmissionInput").value;
-  let creator = "TEMP"; //FIX NEEDED
+  let creator = "TEMP"; //This is overwritten later.
   let description = document.getElementById("descriptionSubmissionInput").value;
   let age = document.getElementById("ageSubmissionInput").value;
   let category = document.getElementById("categorySubmissionInput").value;
@@ -148,6 +148,7 @@ async function addMarkers() {
     }
     map.setCenter([lng, lat]);
   }
+  PNLAlgorithm(lat, lng);
 }
 
 // Function to calculate distance between user input and saved locations, for a range
@@ -159,9 +160,9 @@ function distanceCoordinatesKm(lat1, lon1, lat2, lon2) {
   var a =
     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
     Math.cos((lat1 * Math.PI) / 180) *
-      Math.cos((lat2 * Math.PI) / 180) *
-      Math.sin(dLon / 2) *
-      Math.sin(dLon / 2);
+    Math.cos((lat2 * Math.PI) / 180) *
+    Math.sin(dLon / 2) *
+    Math.sin(dLon / 2);
   var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   var d = R * c;
   return d;
@@ -181,10 +182,10 @@ async function activityDetail(location_id) {
   const data = await response.json();
   document.getElementById("activity_name").innerHTML = data.activityName;
   document.getElementById("activity_description").innerHTML = data.description;
-  document.getElementById("activity_category").innerHTML = data.category
-  document.getElementById("activity_creator").innerHTML = data.creator
-  document.getElementById("activity_age").innerHTML = data.age
-  document.getElementById("activity_average_price").innerHTML = data.price
+  document.getElementById("activity_category").innerHTML = data.category;
+  document.getElementById("activity_creator").innerHTML = data.creator;
+  document.getElementById("activity_age").innerHTML = data.age;
+  document.getElementById("activity_average_price").innerHTML = data.price;
 
   document.getElementById("submit_comment_btn").name = location_id;
 
@@ -229,7 +230,9 @@ async function refreshActivityDetail(location_id) {
       star_str +
       "<br><label>" +
       comment["comment"] +
-      "</label><br><label>Posted by " + comment.author + "</label><div style=\"border:1px solid #CCC\"></div></div>";
+      "</label><br><label>Posted by " +
+      comment.author +
+      '</label><div style="border:1px solid #CCC"></div></div>';
   });
   document.getElementById("activity_comments").innerHTML = html;
 }
@@ -238,17 +241,34 @@ function closeActivityDetail() {
   document.getElementById("activity_dialog").style.display = "none";
 }
 //to store an actitivity to itinerary array in the backend.js
-async function addToSchedule(location_id){
+async function addToSchedule(location_id) {
   let actitivity_name = document.getElementById("activity_name").textContent;
-  let actitivity_category = document.getElementById("activity_category").textContent;
-  let actitivity_creator = document.getElementById("activity_creator").textContent;
-  let activitity_description = document.getElementById("activity_description").textContent;
+  let actitivity_category =
+    document.getElementById("activity_category").textContent;
+  let actitivity_creator =
+    document.getElementById("activity_creator").textContent;
+  let activitity_description = document.getElementById(
+    "activity_description"
+  ).textContent;
   let activitity_age = document.getElementById("activity_age").textContent;
-  let activity_average_price = document.getElementById("activity_average_price").textContent;
-  let date = new Date(document.getElementById("scheduleDate").value).toLocaleDateString("en-GB");
+  let activity_average_price = document.getElementById(
+    "activity_average_price"
+  ).textContent;
+  let date = new Date(
+    document.getElementById("scheduleDate").value
+  ).toLocaleDateString("en-GB");
 
-  console.log(date, location_id,actitivity_name, actitivity_category, actitivity_creator,activitity_description, activitity_age, activity_average_price);
-  
+  console.log(
+    date,
+    location_id,
+    actitivity_name,
+    actitivity_category,
+    actitivity_creator,
+    activitity_description,
+    activitity_age,
+    activity_average_price
+  );
+
   await fetch(`http://localhost:5000/user-itinerary-post`, {
     method: "POST",
     body: JSON.stringify({
@@ -267,10 +287,10 @@ async function addToSchedule(location_id){
   console.log(res);
 }
 
-
 //Filter and Submission Code:
 
 //Popular Near this Activity
+//NOT CURRENTLY USED
 //Source: https://jsfiddle.net/45c5r246/34/
 function PNAAlgorithm(viewedActivity) {
   let recommendedActivityCount = 3;
@@ -301,11 +321,18 @@ function PNAAlgorithm(viewedActivity) {
 //Popular Near this Location
 //Given coordinates this function will recommend activities a number of activities that are within the given range.
 //Source: https://jsfiddle.net/45c5r246/34/
-function PNLAlgorithm(latitude, longitude) {
-  let recommendedActivityCount = 3;
+async function PNLAlgorithm(latitude, longitude) {
+  let recommendedActivityCount = 4;
   let range = 30000;
-  let potentialActivities = filterArea(latitude, longitude, range);
+  let activities = await getActivities();
+  let potentialActivities = filterArea(activities, latitude, longitude, range);
   let recommendedActivities = [];
+
+  if (potentialActivities.length == 0) {
+    return;
+  } else if (potentialActivities.length < recommendedActivityCount) {
+    recommendedActivityCount = potentialActivities.length;
+  }
 
   //Source: https://stackoverflow.com/questions/10024866/remove-object-from-array-using-javascript
   for (let i = 0; i < recommendedActivityCount; i++) {
@@ -324,12 +351,14 @@ function PNLAlgorithm(latitude, longitude) {
       (activity) => activity.activityName == maxRatedActivity.activityName
     );
   }
-
   displayRecommendations(recommendedActivities);
 }
 
 //Displays the recommendations.
 function displayRecommendations(recommendedActivities) {
+  if (recommendedActivities == "" | recommendedActivities == null | recommendedActivities == undefined) {
+    return;
+  }
   //Empties the recommendation result sections if it contains anything.
   let reccommendationResults = document.getElementById(
     "reccommendationResults"
@@ -370,11 +399,18 @@ function displayRecommendations(recommendedActivities) {
     resultActivityPrice.innerHTML =
       "Average Price: £" + recommendedActivities[i].price;
 
+    var resultActivityAuthor = document.createElement("div");
+    resultActivityAuthor.id = "resultActivityAuthor";
+    resultPanel.className = "detailSubPanel";
+    resultActivityAuthor.innerHTML =
+      "Author" + recommendedActivities[i].creator;
+
     resultPanel.appendChild(resultActivityName);
     resultPanel.appendChild(resultActivityDescription);
     resultPanel.appendChild(resultActivityAge);
     resultPanel.appendChild(resultActivityCategory);
     resultPanel.appendChild(resultActivityPrice);
+    resultPanel.appendChild(resultActivityAuthor);
 
     reccommendationResults.appendChild(resultPanel);
   }
@@ -383,6 +419,12 @@ function displayRecommendations(recommendedActivities) {
 //Filters all activities by age, category and price. This is called by the filter form in the HTML.
 async function filterActivities() {
   let filterResults = await getActivities();
+
+  filterResults = filterArea(
+    document.getElementById("latitudeFilterInput").value,
+    document.getElementById("longitudeFilterInput").value,
+    document.getElementById("rangeFilterInput").value
+  );
 
   filterResults = filterAge(
     filterResults,
@@ -405,18 +447,12 @@ async function filterActivities() {
 
 //Displays the filtered activities.
 function displayFilteredActivities(filteredActivities) {
-  console.log("Returning Filter Results from inside display function:");
-  console.log(filteredActivities);
   //Empties the filter result sections if it contains anything.
   let filterResults = document.getElementById("filterResults");
   filterResults.innerHTML = "";
 
   //Creates a div for each activity, and fills it with divs containing its various properties.
-  console.log(typeof filteredActivities);
-  console.log(filterActivities.length);
   for (let i = 0; i < filteredActivities.length; i++) {
-    console.log("Ping");
-    console.log(filteredActivities[i]);
     var resultPanel = document.createElement("div");
     resultPanel.className = "resultPanel";
 
@@ -449,11 +485,17 @@ function displayFilteredActivities(filteredActivities) {
     resultActivityPrice.innerHTML =
       "Average Price: £" + filteredActivities[i].price;
 
+    var resultActivityAuthor = document.createElement("div");
+    resultActivityAuthor.id = "resultActivityAuthor";
+    resultPanel.className = "detailSubPanel";
+    resultActivityAuthor.innerHTML = "Author" + filteredActivities[i].creator;
+
     resultPanel.appendChild(resultActivityName);
     resultPanel.appendChild(resultActivityDescription);
     resultPanel.appendChild(resultActivityAge);
     resultPanel.appendChild(resultActivityCategory);
     resultPanel.appendChild(resultActivityPrice);
+    resultPanel.appendChild(resultActivityAuthor);
 
     filterResults.appendChild(resultPanel);
   }
@@ -484,27 +526,26 @@ async function activityVicinity(viewedActivity, range) {
 }
 
 //Filters activites to ones that exist near the given coordinates.
-async function filterArea(latitude, longitude, range) {
-  let activities = await getActivities();
+function filterArea(activities, latitude, longitude, range) {
   let potentialActivities = [];
 
-  if (range == "All") {
+  if ((latitude == "") | (longitude == "") | (range == "")) {
     return potentialActivities;
   } else {
     for (let i = 0; i < activities.length; i++) {
       if (
-        getDistance(
+        distanceCoordinatesKm(
           activities[i].latitude,
           activities[i].longitude,
           latitude,
           longitude
-        ) <= range
+        ) <= (range/1000)
       ) {
         potentialActivities.push(activities[i]);
       }
     }
-    return potentialActivities;
   }
+  return potentialActivities;
 }
 
 //Filters activities based on the provided age category.
@@ -544,7 +585,7 @@ function filterCategory(potentialActivities, givenCategory) {
 function filterPrice(potentialActivities, givenPriceLower, givenPriceUpper) {
   let filteredActivities = [];
 
-  if ((givenPriceLower == "Any") | (givenPriceUpper == "Any")) {
+  if (givenPriceLower == "" && givenPriceUpper == "") {
     return potentialActivities;
   } else {
     for (let i = 0; i < potentialActivities.length; i++) {
