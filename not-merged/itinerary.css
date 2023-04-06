@@ -2,3 +2,65 @@
 /* Module: Masters Programming Projects */
 /* Matriculation numbers: 220024877, 220033532, 220009855, 220033540, 220031591 */
 /* Itinerary: Creating a Holiday Planner */
+/*Reference(https://www.youtube.com/watch?v=_Kdbs4iukcM)*/
+* {
+    font-family: sans-serif;
+    box-sizing: border-box;
+    color: white;
+}
+body{
+    margin: 0;
+    padding: 0;
+    background-color: #135e96;
+}
+.container{
+    padding: 40px;
+    margin: 0 auto;
+    width: 1200px; /*if display is wider than width, the content will be automatically shifted*/
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+header{
+    display: flex;
+    align-items: center;
+}
+.choice{
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    width: 400px;
+    justify-content: space-between;
+}
+button.monthBtn{
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 30px;
+    transition: transform 100ms;
+}
+button.monthBtn{
+    transform: scale(1.5);
+}
+#calendar{/*define lows and columns*/
+    display: grid;
+    grid-template-columns: repeat(7, 150px);
+    gap: 3px;
+}
+.day{
+    width: 150px;
+    height: 150px;
+    padding: 10px;
+    background-color: #083251;
+    border-radius: 5px;
+    transition: all 250ms;
+}
+.day:hover{ /*when the user hover the cursor over each day box*/
+    background-color: #062338;
+}
+.day-number{/*To design date numbers*/
+    font-size: 42px;
+    font-weight: bold;
+    text-align: center;
+    margin: 0;
+}
