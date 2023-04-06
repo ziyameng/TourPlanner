@@ -240,14 +240,16 @@ function closeActivityDetail() {
 //to store an actitivity to itinerary array in the backend.js
 async function addToSchedule(location_id){
   let actitivity_name = document.getElementById("activity_name").textContent;
+  let actitivity_category = document.getElementById("activity_category").textContent;
+  let actitivity_creator = document.getElementById("activity_creator").textContent;
   let activitity_description = document.getElementById("activity_description").textContent;
-  let comment = document.getElementById("activity_comment_input").value;
-  let rating = document.getElementById("activity_comment_rating").value;
+  let activitity_age = document.getElementById("activity_age").textContent;
+  let activity_average_price = document.getElementById("activity_average_price").textContent;
   let date = new Date(document.getElementById("scheduleDate").value).toLocaleDateString("en-GB");
 
-  console.log(date, location_id,actitivity_name, activitity_description, comment, rating);
+  console.log(date, location_id,actitivity_name, actitivity_category, actitivity_creator,activitity_description, activitity_age, activity_average_price);
   
-  await fetch(`http://localhost:23843/user-itinerary-post`, {
+  await fetch(`http://localhost:5000/user-itinerary-post`, {
     method: "POST",
     body: JSON.stringify({
       actitivity_date: date,
