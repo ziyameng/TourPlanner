@@ -10,6 +10,7 @@ fetch("http://localhost:5000/user-locations")
   .then((data) => {
     console.log(data);
 
+    
     let table = document.getElementById("myPageTable");
 
     for (let i in data) {
