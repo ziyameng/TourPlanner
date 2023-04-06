@@ -27,24 +27,41 @@
     <h2 class="inline-block" style="margin-left: 36px">
       <a href="/home" id="login_or_register">Login or Register</a>
     </h2>
-    <div id="map"></div>
-    <script>
-      //check display login or logout
-      const loginOrRegister = document.getElementById("login_or_register");
 
-      function updateLoginOrRegister() {
-        if (document.cookie.includes("jwt")) {
-          loginOrRegister.textContent = "Logout";
-          loginOrRegister.href = "/logout";
+    <script>
+      async function updateLoginStatus() {
+        const loginStatus = await fetch("/isLoggedIn");
+        const { loggedIn, jwt } = await loginStatus.json();
+
+        const loginOrRegisterElement =
+          document.getElementById("login_or_register");
+
+        if (loggedIn && jwt) {
+          const username = await getUsernameFromJWT(jwt);
+          loginOrRegisterElement.innerHTML = `${username} - <a href="/logout">Logout</a>`;
         } else {
-          loginOrRegister.textContent = "Login or Register";
-          loginOrRegister.href = "/login";
+          loginOrRegisterElement.innerHTML =
+            '<a href="/home">Login or Register</a>';
         }
       }
 
-      window.addEventListener("DOMContentLoaded", updateLoginOrRegister);
-      //
+      async function getUsernameFromJWT(jwt) {
+        const res = await fetch("/api/auth/username", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ jwt }),
+        });
+        const { username } = await res.json();
+        return username;
+      }
 
+      updateLoginStatus();
+    </script>
+
+    <div id="map"></div>
+    <script>
       mapboxgl.accessToken =
         "pk.eyJ1IjoidGhqMSIsImEiOiJjbGZ3emY1d2swamU1M2ZxcW92MXR3MTJmIn0.m3Uv26y9oW35uVarci-7rA";
       const map = new mapboxgl.Map({
