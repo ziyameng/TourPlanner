@@ -1,5 +1,5 @@
 const Mongoose = require("mongoose");
-const CommentSchema = new Mongoose.Schema({
+const ItinerarySchema = new Mongoose.Schema({
   location_id: {
     type: String,
   },
@@ -9,22 +9,19 @@ const CommentSchema = new Mongoose.Schema({
   actitivity_name: {
     type: String,
   },
-  rating: {
+  actitivity_category: {
     type: String,
   },
-  rating: {
+  actitivity_creator: {
     type: String,
   },
-  rating: {
+  activitity_age: {
     type: String,
   },
-  rating: {
-    type: String,
-  },
-  rating: {
-    type: String,
+  activity_average_price: {
+    type: Number,
   },
 });
 
-const comment = Mongoose.model("comment", CommentSchema);
-module.exports = comment;
+const Itinerary = Mongoose.model("itinerary", ItinerarySchema);
+module.exports = Itinerary;

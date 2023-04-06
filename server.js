@@ -15,6 +15,12 @@ const {
   postUserLocations,
   deleteUserLocations,
 } = require("./server/controller/locationController");
+
+const {
+  postItinerary,
+  getItinerary,
+} = require("./server/itineraryController/itineraryController");
+
 const app = express();
 
 require("dotenv").config();
@@ -37,6 +43,10 @@ app.get("/user-locations/:LOCATION_ID", getLocationById);
 // add auth
 app.post("/user-locations", userAuth, postUserLocations);
 app.post("/user-locations-delete", deleteUserLocations);
+//add an event to itinerary pg
+app.post("/user-itinerary-post", postItinerary);
+//app.get("/user-itinerary-get", getItinerary)
+//delete an event to itinerary pg
 
 // Other existing routes
 app.get("/basic", userAuth, (req, res) => res.send("User Route"));
