@@ -233,6 +233,34 @@ async function refreshActivityDetail(location_id) {
 function closeActivityDetail() {
   document.getElementById("activity_dialog").style.display = "none";
 }
+//to store an actitivity to itinerary array in the backend.js
+async function addToSchedule(location_id){
+  let actitivity_name = document.getElementById("activity_name").textContent;
+  let activitity_description = document.getElementById("activity_description").textContent;
+  let comment = document.getElementById("activity_comment_input").value;
+  let rating = document.getElementById("activity_comment_rating").value;
+  let date = new Date(document.getElementById("scheduleDate").value).toLocaleDateString("en-GB");
+
+  console.log(date, location_id,actitivity_name, activitity_description, comment, rating);
+  
+  await fetch(`http://localhost:23843/user-itinerary-post`, {
+    method: "POST",
+    body: JSON.stringify({
+      actitivity_date: date,
+      actitivity_name: actitivity_name,
+      activitity_description: activitity_description,
+      location_id: location_id,
+      comment: comment,
+      rating: rating,
+    }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const res = await response.json();
+  console.log(res);
+}
+
 
 //Filter and Submission Code:
 

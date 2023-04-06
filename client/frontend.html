@@ -72,7 +72,12 @@
           Submit Comment
         </button>
       </div>
-      <button>Add it to my plan</button>
+      <form>
+        <label>
+          Enter the date: <input type="date" id="scheduleDate" name="scheduleDate" required pattern="\d{4}-\d{2}-\d{2}"/><!--Reference:(https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/date)-->
+        </label>
+        <button id = "addMyPlanbtn" name="" onclick="addToSchedule(this.name)">Add it to my plan</button>
+      </form>
       <button onClick="closeActivityDetail()">Close</button>
     </dialog>
 
