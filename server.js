@@ -108,3 +108,15 @@ app.get("/myPage.js", (req, res) =>
 app.get("/myPage.css", (req, res) =>
   res.sendFile(path.join(__dirname, "client", "/myPage.css"))
 );
+//======== API endpoints for Itinerary Page ========
+app.get("/itinerary", (req, res) =>
+  res.sendFile(path.join(__dirname, "client", "/itinerary.html"))
+);
+
+app.get("/itinerary.js", (req, res) =>
+  res.sendFile(path.join(__dirname, "client", "/itinerary.js"))
+);
+
+app.get("/itinerary.css", (req, res) =>
+  res.sendFile(path.join(__dirname, "client", "/itinerary.css"))
+);
