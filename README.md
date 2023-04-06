@@ -1,4 +1,6 @@
-# start the server for development: npm run dev
+# start the server for development:
+
+# npm run dev
 
 # start the server regularly run:
 
