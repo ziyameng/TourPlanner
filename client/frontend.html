@@ -42,9 +42,13 @@
     </script>
 
     <!-- Detail of activity, Comment dialog  -->
-    <dialog id="activity_dialog" style="display: none">
-      <p id="activity_name"></p>
-      <p id="activity_description"></p>
+    <dialog id="activity_dialog" style="display: none; height: 300px; overflow-y: scroll; scroll-behavior: smooth;">
+      <h2 id="activity_name"></h2>
+      <label for="activity_category" style="float:left">Category:  </label><p id="activity_category"></p>
+      <label for="activity_creator" style="float:left">Creator: </label><p id="activity_creator"></p>
+      <label for="activity_description" style="float:left">Description: </label><p id="activity_description"></p>
+      <label for="activity_age" style="float:left">Age: </label><p id="activity_age"></p>
+      <label for="activity_average_price" style="float:left">Average Price: </label><p id="activity_average_price"></p>
       <div
         id="activity_comments"
         style="

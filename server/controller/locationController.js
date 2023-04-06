@@ -1,4 +1,5 @@
 const Location = require("../model/Location");
+const { getUserNameFromJWT } = require("../middleware/auth")
 
 // get all location in db
 exports.getUserLocations = async (req, res) => {
@@ -34,6 +35,8 @@ exports.getLocationById = async (req, res) => {
 // upload location
 exports.postUserLocations = async (req, res) => {
   const customLocation = req.body;
+
+  customLocation.creator = getUserNameFromJWT(req.cookies.jwt)
 
   customLocation.coordinates = [customLocation.latitude, customLocation.longitude]
   delete customLocation.latitude

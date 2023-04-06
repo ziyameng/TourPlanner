@@ -181,6 +181,10 @@ async function activityDetail(location_id) {
   const data = await response.json();
   document.getElementById("activity_name").innerHTML = data.activityName;
   document.getElementById("activity_description").innerHTML = data.description;
+  document.getElementById("activity_category").innerHTML = data.category
+  document.getElementById("activity_creator").innerHTML = data.creator
+  document.getElementById("activity_age").innerHTML = data.age
+  document.getElementById("activity_average_price").innerHTML = data.price
 
   document.getElementById("submit_comment_btn").name = location_id;
 
