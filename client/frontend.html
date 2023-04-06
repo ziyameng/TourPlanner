@@ -25,10 +25,26 @@
     </h2>
 
     <h2 class="inline-block" style="margin-left: 36px">
-      <a href="/home">Login or Register</a>
+      <a href="/home" id="login_or_register">Login or Register</a>
     </h2>
     <div id="map"></div>
     <script>
+      //check display login or logout
+      const loginOrRegister = document.getElementById("login_or_register");
+
+      function updateLoginOrRegister() {
+        if (document.cookie.includes("jwt")) {
+          loginOrRegister.textContent = "Logout";
+          loginOrRegister.href = "/logout";
+        } else {
+          loginOrRegister.textContent = "Login or Register";
+          loginOrRegister.href = "/login";
+        }
+      }
+
+      window.addEventListener("DOMContentLoaded", updateLoginOrRegister);
+      //
+
       mapboxgl.accessToken =
         "pk.eyJ1IjoidGhqMSIsImEiOiJjbGZ3emY1d2swamU1M2ZxcW92MXR3MTJmIn0.m3Uv26y9oW35uVarci-7rA";
       const map = new mapboxgl.Map({
@@ -42,13 +58,30 @@
     </script>
 
     <!-- Detail of activity, Comment dialog  -->
-    <dialog id="activity_dialog" style="display: none; height: 300px; overflow-y: scroll; scroll-behavior: smooth;">
+    <dialog
+      id="activity_dialog"
+      style="
+        display: none;
+        height: 300px;
+        overflow-y: scroll;
+        scroll-behavior: smooth;
+      "
+    >
       <h2 id="activity_name"></h2>
-      <label for="activity_category" style="float:left">Category:  </label><p id="activity_category"></p>
-      <label for="activity_creator" style="float:left">Creator: </label><p id="activity_creator"></p>
-      <label for="activity_description" style="float:left">Description: </label><p id="activity_description"></p>
-      <label for="activity_age" style="float:left">Age: </label><p id="activity_age"></p>
-      <label for="activity_average_price" style="float:left">Average Price: </label><p id="activity_average_price"></p>
+      <label for="activity_category" style="float: left">Category: </label>
+      <p id="activity_category"></p>
+      <label for="activity_creator" style="float: left">Creator: </label>
+      <p id="activity_creator"></p>
+      <label for="activity_description" style="float: left"
+        >Description:
+      </label>
+      <p id="activity_description"></p>
+      <label for="activity_age" style="float: left">Age: </label>
+      <p id="activity_age"></p>
+      <label for="activity_average_price" style="float: left"
+        >Average Price:
+      </label>
+      <p id="activity_average_price"></p>
       <div
         id="activity_comments"
         style="
@@ -78,9 +111,18 @@
       </div>
       <form>
         <label>
-          Enter the date: <input type="date" id="scheduleDate" name="scheduleDate" required pattern="\d{4}-\d{2}-\d{2}"/><!--Reference:(https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/date)-->
+          Enter the date:
+          <input
+            type="date"
+            id="scheduleDate"
+            name="scheduleDate"
+            required
+            pattern="\d{4}-\d{2}-\d{2}"
+          /><!--Reference:(https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/date)-->
         </label>
-        <button id = "addMyPlanbtn" name="" onclick="addToSchedule(this.name)">Add it to my plan</button>
+        <button id="addMyPlanbtn" name="" onclick="addToSchedule(this.name)">
+          Add it to my plan
+        </button>
       </form>
       <button onClick="closeActivityDetail()">Close</button>
     </dialog>
