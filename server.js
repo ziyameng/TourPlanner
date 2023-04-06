@@ -4,7 +4,7 @@ const cors = require("cors");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const connectDB = require("./server/config/database");
-const { userAuth } = require("./server/middleware/auth");
+const { userAuth, isLoggedIn } = require("./server/middleware/auth");
 const {
   getUserComments,
   postUserComments,
@@ -15,6 +15,12 @@ const {
   postUserLocations,
   deleteUserLocations,
 } = require("./server/controller/locationController");
+
+const {
+  postItinerary,
+  getItinerary,
+} = require("./server/itineraryController/itineraryController");
+
 const app = express();
 
 require("dotenv").config();
@@ -37,6 +43,10 @@ app.get("/user-locations/:LOCATION_ID", getLocationById);
 // add auth
 app.post("/user-locations", userAuth, postUserLocations);
 app.post("/user-locations-delete", deleteUserLocations);
+//add an event to itinerary pg
+app.post("/user-itinerary-post", postItinerary);
+app.get("/user-itinerary-get", getItinerary)
+//delete an event to itinerary pg
 
 // Other existing routes
 app.get("/basic", userAuth, (req, res) => res.send("User Route"));
@@ -50,9 +60,20 @@ app.get("/register", (req, res) =>
 app.get("/login", (req, res) =>
   res.sendFile(path.join(__dirname, "client", "login.html"))
 );
+
 app.get("/logout", (req, res) => {
   res.cookie("jwt", "", { maxAge: "1" });
   res.redirect("/");
+});
+
+//
+app.get("/isLoggedIn", (req, res) => {
+  const loggedIn = isLoggedIn(req);
+  if (loggedIn) {
+    res.json({ loggedIn, jwt: req.cookies.jwt });
+  } else {
+    res.json({ loggedIn });
+  }
 });
 
 connectDB();

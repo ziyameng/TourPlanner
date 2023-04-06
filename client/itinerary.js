@@ -27,7 +27,9 @@ const months =[
 const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 //to extract added activies from database
-const addedActivities = "http://localhost:4000/events/";
+const addedActivities = "http://localhost:5000/user-itinerary-get";
+
+let events;
 
 const today = new Date();
 let currentMonth = today.getMonth();
@@ -37,13 +39,26 @@ let currentYear = today.getFullYear();
 const loadActivities = async ()=> {
     const res = await fetch(addedActivities);
     const data = await res.json();
+    console.log(data);
+    events = data.reduce((accumulator, event)=>{
+        const evnetTime = new Date(event.actitivity_date);
+        const eventDate = new Date(evnetTime.toDateString());
+        console.log(evnetTime);
+        console.log(eventDate);
+
+        accumulator[eventDate]=event;//to store all the saved activities using accumulator
+        return accumulator;
+        
+    }, {});
+    updateCalendar(currentMonth, currentYear, events);
+    /*
     const activity = data;
     const events = activity.reduce((accumulator, event)=>{
         const eventTime = new Date (event.content.time);
         const eventDate = new Date(eventTime.toDateString());
         console.log(eventDate);
-    })
-    console.log(data);
+    })*/
+    console.log(events);
 }
 loadActivities();
 
@@ -97,6 +112,18 @@ const updateCalendar = (month, year, events) =>{
         */
         const dayNumber = day.querySelector('.day-number');//to diaplay date
         if(i >= theFirstDayOfWeek && dayCounter <= daysInMonth){
+
+            const theDate = new Date(year, month, dayCounter);
+
+            const eventName = day.querySelector('.event-name');
+            if (events[theDate]){
+                const event = events[theDate];
+                eventName.innerHTML = `*${event.actitivity_name}`;
+            }
+            else{//to show the event only on teh designated date
+                eventName.innerHTML=``;
+            }
+            console.log(theDate);
             dayNumber.innerText = dayCounter;
             dayCounter++;
         }
@@ -112,7 +139,7 @@ const lastMonth =()=>{//To display the last Month]
         currentMonth=12;
         currentYear--;
     }
-    updateCalendar(--currentMonth, currentYear);//To move to the last month
+    updateCalendar(--currentMonth, currentYear, events);//To move to the last month
 
 }
 const nextMonth = () =>{// To display the next month
@@ -120,8 +147,13 @@ const nextMonth = () =>{// To display the next month
         currentMonth=-1;
         currentYear++
     }
-    updateCalendar(++currentMonth, currentYear);//To move to the next month
+    updateCalendar(++currentMonth, currentYear, events);//To move to the next month
 }
 
-drawBlankCalendar();
-updateCalendar(currentMonth, currentYear);
+
+const loading = async()=>{//To make sure it is loading events
+    drawBlankCalendar();
+    updateCalendar(currentMonth, currentYear, {});
+    await loadActivities();
+}
+loading();

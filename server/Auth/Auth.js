@@ -2,6 +2,7 @@ const User = require("../model/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
+
 const jwtSecret = process.env.jwtSecret;
 
 //Register Funciton
@@ -87,4 +88,19 @@ exports.login = async (req, res, next) => {
       error: error.message,
     });
   }
+};
+
+//Get User Name
+exports.getUsernameFromJWT = async (req, res) => {
+  const { jwt: token } = req.body;
+  let username = "";
+
+  jwt.verify(token, jwtSecret, (err, decodedToken) => {
+    if (err) {
+      res.status(401).json({ message: "not authorized" });
+    } else {
+      username = decodedToken.username;
+      res.status(200).json({ username });
+    }
+  });
 };
