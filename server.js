@@ -45,7 +45,7 @@ app.post("/user-locations", userAuth, postUserLocations);
 app.post("/user-locations-delete", deleteUserLocations);
 //add an event to itinerary pg
 app.post("/user-itinerary-post", postItinerary);
-//app.get("/user-itinerary-get", getItinerary)
+app.get("/user-itinerary-get", getItinerary)
 //delete an event to itinerary pg
 
 // Other existing routes

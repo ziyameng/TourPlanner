@@ -245,7 +245,7 @@ async function addToSchedule(location_id){
   let activitity_description = document.getElementById("activity_description").textContent;
   let activitity_age = document.getElementById("activity_age").textContent;
   let activity_average_price = document.getElementById("activity_average_price").textContent;
-  let date = new Date(document.getElementById("scheduleDate").value).toLocaleDateString("en-GB");
+  let date = document.getElementById("scheduleDate").value;
 
 
   console.log(date, location_id,actitivity_name, actitivity_category, actitivity_creator,activitity_description, activitity_age, activity_average_price);

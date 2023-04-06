@@ -64,3 +64,8 @@ button.monthBtn{
     text-align: center;
     margin: 0;
 }
+.event-name{
+    font-weight: bold;
+    color: crimson;
+    font-size: large;
+}
