@@ -4,7 +4,7 @@ const cors = require("cors");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const connectDB = require("./server/config/database");
-const { userAuth } = require("./server/middleware/auth");
+const { userAuth, isLoggedIn } = require("./server/middleware/auth");
 const {
   getUserComments,
   postUserComments,
@@ -60,9 +60,20 @@ app.get("/register", (req, res) =>
 app.get("/login", (req, res) =>
   res.sendFile(path.join(__dirname, "client", "login.html"))
 );
+
 app.get("/logout", (req, res) => {
   res.cookie("jwt", "", { maxAge: "1" });
   res.redirect("/");
+});
+
+//
+app.get("/isLoggedIn", (req, res) => {
+  const loggedIn = isLoggedIn(req);
+  if (loggedIn) {
+    res.json({ loggedIn, jwt: req.cookies.jwt });
+  } else {
+    res.json({ loggedIn });
+  }
 });
 
 connectDB();
