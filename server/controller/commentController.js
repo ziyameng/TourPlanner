@@ -1,5 +1,7 @@
 const Comment = require("../model/Comment");
+const { getUserNameFromJWT } = require("../middleware/auth")
 
+// get all comments posted in the activity by location id
 exports.getUserComments = async (req, res) => {
   const { LOCATION_ID } = req.params;
 
@@ -13,8 +15,12 @@ exports.getUserComments = async (req, res) => {
   }
 };
 
+// post a comment in the activity
 exports.postUserComments = async (req, res) => {
   const comment = req.body;
+
+  comment.author = getUserNameFromJWT(req.cookies.jwt)
+  console.log('comment author', comment.author)
 
   try {
     const result = await Comment.create(comment);

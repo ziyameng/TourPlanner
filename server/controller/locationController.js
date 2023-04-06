@@ -1,5 +1,6 @@
 const Location = require("../model/Location");
 
+// get all location in db
 exports.getUserLocations = async (req, res) => {
   try {
     const locations = await Location.find({});
@@ -11,11 +12,12 @@ exports.getUserLocations = async (req, res) => {
   }
 };
 
+// get one location by location id
 exports.getLocationById = async (req, res) => {
   const { LOCATION_ID } = req.params;
 
   try {
-    const location = await Location.findOne({ id: LOCATION_ID });
+    const location = await Location.findOne({ _id: LOCATION_ID });
 
     if (!location) {
       res.status(400).send("Failed to find the location");
@@ -29,8 +31,15 @@ exports.getLocationById = async (req, res) => {
   }
 };
 
+// upload location
 exports.postUserLocations = async (req, res) => {
   const customLocation = req.body;
+
+  customLocation.coordinates = [customLocation.latitude, customLocation.longitude]
+  delete customLocation.latitude
+  delete customLocation.longitude
+
+  console.log('upload location', customLocation)
 
   try {
     await Location.create(customLocation);
@@ -38,7 +47,7 @@ exports.postUserLocations = async (req, res) => {
       .status(200)
       .json({
         success: true,
-        message: `Added Location ${customLocation.name}`,
+        message: `Added Location ${customLocation.activityName}`,
       });
   } catch (error) {
     res
@@ -47,6 +56,7 @@ exports.postUserLocations = async (req, res) => {
   }
 };
 
+// delete location by locatio id
 exports.deleteUserLocations = async (req, res) => {
   const { postIdToDelete } = req.body;
 

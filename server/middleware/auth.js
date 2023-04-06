@@ -1,6 +1,16 @@
 const jwt = require("jsonwebtoken");
 const jwtSecret = process.env.jwtSecret;
 
+// get username from jwt
+exports.getUserNameFromJWT = (token) => {
+  let username = ""
+  jwt.verify(token, jwtSecret, (err, decodedToken) => {
+    console.log(decodedToken)
+    username = decodedToken.username
+  });
+  return username
+}
+
 exports.userAuth = (req, res, next) => {
   const token = req.cookies.jwt;
   if (token) {

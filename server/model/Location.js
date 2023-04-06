@@ -1,15 +1,13 @@
+const { Double } = require("mongodb");
 const Mongoose = require("mongoose");
 const LocationSchema = new Mongoose.Schema({
-  id: {
-    type: String,
-  },
   coordinates: {
     type: Array,
   },
-  activity: {
+  category : {
     type: String,
   },
-  name: {
+  activityName: {
     type: String,
   },
   description: {
@@ -18,6 +16,15 @@ const LocationSchema = new Mongoose.Schema({
   date: {
     type: String,
   },
+  creator : {
+    type : String,
+  },
+  age : {
+    type : String,
+  },
+  price : {
+    type : Number,
+  }
 });
 
 const Location = Mongoose.model("location", LocationSchema);

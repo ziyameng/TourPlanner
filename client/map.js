@@ -112,7 +112,7 @@ async function addMarkers() {
 
   // Add locations uploaded by users to another array
   userData.forEach((item) => {
-    if (item.activity == activity) {
+    if (item.category == activity) {
       userLocations.push(item);
     }
   });
@@ -121,7 +121,7 @@ async function addMarkers() {
   // Display locations by users in the map
   for (const location of userLocations) {
     const coordinates = location.coordinates;
-    const name = location.name;
+    const name = location.activityName;
     const description = location.description;
     const radiusKm = radius / 1000;
 
@@ -129,19 +129,19 @@ async function addMarkers() {
     const distance = distanceCoordinatesKm(
       lat,
       lng,
-      coordinates[1],
-      coordinates[0]
+      parseFloat(coordinates[0]),
+      parseFloat(coordinates[1])
     );
 
     if (distance <= radiusKm) {
       // Add marker from users to the map display
       // User locations are displayed in orange, based on Mapbox documentation (Mapbox, 2023)
       marker = new mapboxgl.Marker({ color: "darkorange" })
-        .setLngLat(coordinates)
+        .setLngLat([coordinates[1], coordinates[0]])
         .addTo(map)
         .setPopup(
           new mapboxgl.Popup().setHTML(
-            `<h3>${name}</h3><p>${description}</p><button name="${location.id}" onclick="activityDetail(this.name)">Detail</button>`
+            `<h3>${name}</h3><p>${description}</p><button name="${location._id}" onclick="activityDetail(this.name)">Detail</button>`
           )
         );
       markers.push(marker);
@@ -179,7 +179,7 @@ async function activityDetail(location_id) {
     `http://localhost:5000/user-locations/${location_id}`
   );
   const data = await response.json();
-  document.getElementById("activity_name").innerHTML = data.name;
+  document.getElementById("activity_name").innerHTML = data.activityName;
   document.getElementById("activity_description").innerHTML = data.description;
 
   document.getElementById("submit_comment_btn").name = location_id;
@@ -225,7 +225,7 @@ async function refreshActivityDetail(location_id) {
       star_str +
       "<br><label>" +
       comment["comment"] +
-      "</label></div>";
+      "</label><br><label>Posted by " + comment.author + "</label><div style=\"border:1px solid #CCC\"></div></div>";
   });
   document.getElementById("activity_comments").innerHTML = html;
 }

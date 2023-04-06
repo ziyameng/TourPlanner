@@ -30,10 +30,12 @@ app.use(cors());
 
 // Add endpoints for Comments and Locations
 app.get("/user-comments/:LOCATION_ID", getUserComments);
-app.post("/user-comments", postUserComments);
+// add auth
+app.post("/user-comments", userAuth, postUserComments);
 app.get("/user-locations", getUserLocations);
 app.get("/user-locations/:LOCATION_ID", getLocationById);
-app.post("/user-locations", postUserLocations);
+// add auth
+app.post("/user-locations", userAuth, postUserLocations);
 app.post("/user-locations-delete", deleteUserLocations);
 
 // Other existing routes

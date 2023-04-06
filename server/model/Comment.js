@@ -3,6 +3,9 @@ const CommentSchema = new Mongoose.Schema({
   location_id: {
     type: String,
   },
+  author : {
+    type: String
+  },
   comment: {
     type: String,
   },
