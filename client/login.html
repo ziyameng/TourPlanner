@@ -1,27 +1,22 @@
-<!-- Module code: CS5003 -->
-<!-- Module: Masters Programming Projects -->
-<!-- Matriculation numbers: 220024877, 220033532, 220009855, 220033540, 220031591 -->
-<!-- Client Fullstack Authentication: Creating a Holiday Planner -->
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Register</title>
+    <title>Login Page</title>
   </head>
   <body>
-    <h1>Register Page</h1>
+    <h1>Login Page</h1>
     <form>
       <div class="error" style="background-color: red"></div>
       <label for="username">Username</label><br />
       <input type="text" id="username" required /><br />
       <label for="password">Password</label><br />
       <input type="password" id="password" required /><br />
-      <input type="submit" value="register" /><br />
+      <input type="submit" value="login" /><br />
     </form>
-    <a href="/login">Already register ? Login</a>
+    <a href="/register">Don't have an account ? Register</a>
 
     <script>
       const form = document.querySelector("form");
@@ -32,7 +27,7 @@
         e.preventDefault();
         display.textContent = "";
         try {
-          const res = await fetch("/api/auth/register", {
+          const res = await fetch("/api/auth/login", {
             method: "POST",
             body: JSON.stringify({
               username: username.value,

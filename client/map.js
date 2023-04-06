@@ -6,7 +6,8 @@
 // Defining needed variables for user interaction with the map
 const markers = [];
 const mapContainer = document.getElementById("map");
-const tripMapApiKey = "5ae2e3f221c38a28845f05b6327f823bbe3325268803cc58e306d9ef";
+const tripMapApiKey =
+  "5ae2e3f221c38a28845f05b6327f823bbe3325268803cc58e306d9ef";
 
 // Let users submit their own activities to the application
 // Store and process these so they can be displayed in the map when called
@@ -35,7 +36,7 @@ async function saveCustomLocation(event) {
   };
 
   // Send the data for the newly added activity to the backend to be saved
-  const response = await fetch("http://localhost:23843/user-locations", {
+  const response = await fetch("http://localhost:5000/user-locations", {
     method: "POST",
     body: JSON.stringify(customLocation),
     headers: {
@@ -66,7 +67,7 @@ async function addMarkers() {
   console.log("Map Data: ", mapData);
 
   // Send request to backend to get all locations.
-  const userResponse = await fetch("http://localhost:23843/user-locations");
+  const userResponse = await fetch("http://localhost:5000/user-locations");
   const userData = await userResponse.json();
   console.log("User Data: ", userData);
 
@@ -175,7 +176,7 @@ function deg2rad(deg) {
 async function activityDetail(location_id) {
   document.getElementById("activity_dialog").style.display = "block";
   const response = await fetch(
-    `http://localhost:23843/user-locations/${location_id}`
+    `http://localhost:5000/user-locations/${location_id}`
   );
   const data = await response.json();
   document.getElementById("activity_name").innerHTML = data.name;
@@ -190,7 +191,7 @@ async function submit_comment(location_id) {
   let comment = document.getElementById("activity_comment_input").value;
   let rating = document.getElementById("activity_comment_rating").value;
 
-  await fetch(`http://localhost:23843/user-comments`, {
+  await fetch(`http://localhost:5000/user-comments`, {
     method: "POST",
     body: JSON.stringify({
       location_id: location_id,
@@ -207,7 +208,7 @@ async function submit_comment(location_id) {
 
 async function refreshActivityDetail(location_id) {
   let results = await fetch(
-    `http://localhost:23843/user-comments/${location_id}`
+    `http://localhost:5000/user-comments/${location_id}`
   );
   let comments = await results.json();
   console.log("refresh activity detail", comments);
@@ -232,7 +233,6 @@ async function refreshActivityDetail(location_id) {
 function closeActivityDetail() {
   document.getElementById("activity_dialog").style.display = "none";
 }
-
 
 //Filter and Submission Code:
 
@@ -364,14 +364,14 @@ async function filterActivities() {
     document.getElementById("upperPriceFilterInput").value
   );
 
-  console.log("Returning Filter Results:")
+  console.log("Returning Filter Results:");
   console.log(filterResults);
   displayFilteredActivities(filterResults);
 }
 
 //Displays the filtered activities.
 function displayFilteredActivities(filteredActivities) {
-  console.log("Returning Filter Results from inside display function:")
+  console.log("Returning Filter Results from inside display function:");
   console.log(filteredActivities);
   //Empties the filter result sections if it contains anything.
   let filterResults = document.getElementById("filterResults");
@@ -381,7 +381,7 @@ function displayFilteredActivities(filteredActivities) {
   console.log(typeof filteredActivities);
   console.log(filterActivities.length);
   for (let i = 0; i < filteredActivities.length; i++) {
-    console.log("Ping")
+    console.log("Ping");
     console.log(filteredActivities[i]);
     var resultPanel = document.createElement("div");
     resultPanel.className = "resultPanel";
@@ -527,7 +527,7 @@ function filterPrice(potentialActivities, givenPriceLower, givenPriceUpper) {
 }
 
 async function getActivities() {
-  let response = await fetch("http://localhost:23843/user-locations");
+  let response = await fetch("http://localhost:5000/user-locations");
   let data = Object.values(await response.json());
   return data;
 }
