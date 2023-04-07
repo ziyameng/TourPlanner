@@ -38,9 +38,11 @@ exports.postUserLocations = async (req, res) => {
 
   customLocation.creator = getUserNameFromJWT(req.cookies.jwt)
 
+  /*
   customLocation.coordinates = [customLocation.latitude, customLocation.longitude]
   delete customLocation.latitude
   delete customLocation.longitude
+  */
 
   console.log('upload location', customLocation)
 
