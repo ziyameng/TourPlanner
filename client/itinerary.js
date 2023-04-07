@@ -24,7 +24,7 @@ const months =[
 ];
 
 //Store all the days
-const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
 //to extract added activies from database
 const addedActivities = "http://localhost:5000/user-itinerary-get";
