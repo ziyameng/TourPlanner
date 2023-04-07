@@ -307,9 +307,6 @@
           />
         </div>
         <div class="filterSettings">
-          <button id="filterButton" onclick="filterActivities()">Filter</button>
-        </div>
-        <div class="filterSettings">
           <label for="latitudeFilterInput">Add Latitude:</label>
           <input
             type="text"
@@ -333,15 +330,20 @@
             placeholder="Enter range (Metres)"
           />
         </div>
+        <div class="filterSettings">
+          <button id="filterButton" onclick="filterActivities()">Filter</button>
+        </div>
       </div>
     </div>
 
     <!-- Container for displaying the results of the filter search -->
-    <div class="panelDisplay" id="filterResults">Filter Results:</div>
+    <div class="panelDisplay" id="filterResults">
+      <p>Filter Results:</p>
+    </div>
 
     <!-- Container for displaying the recommendation results -->
-    <div class="panelDisplay" id="reccommendationResults">
-      Reccomendation Results:
+    <div class="panelDisplay" id="recommendationResults">
+      <p>Recomendation Results:</p>
     </div>
   </body>
 </html>

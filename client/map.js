@@ -22,6 +22,8 @@ async function saveCustomLocation(event) {
   let longitude = document.getElementById("longitudeSubmissionInput").value;
   let postDate = new Date().toLocaleDateString("en-GB");
 
+  let coordinates = [latitude, longitude];
+
   // Define the data to be sent to the backend server
   const customLocation = {
     activityName: activityName,
@@ -30,8 +32,7 @@ async function saveCustomLocation(event) {
     age: age,
     category: category,
     price: price,
-    latitude: latitude,
-    longitude: longitude,
+    coordinates: coordinates,
     postDate: postDate,
   };
 
@@ -148,7 +149,8 @@ async function addMarkers() {
     }
     map.setCenter([lng, lat]);
   }
-  PNLAlgorithm(lat, lng);
+  console.log("Ping 1");
+  PNLAlgorithm(lat, lng, radius);
 }
 
 // Function to calculate distance between user input and saved locations, for a range
@@ -278,83 +280,69 @@ async function addToSchedule(location_id) {
   console.log(res);
 }
 
-//Filter and Submission Code:
-
-//Popular Near this Activity
-//NOT CURRENTLY USED
-//Source: https://jsfiddle.net/45c5r246/34/
-function PNAAlgorithm(viewedActivity) {
-  let recommendedActivityCount = 3;
-  let potentialActivities = activityVicinity(viewedActivity, "30000");
-  let recommendedActivities = [];
-
-  //Source: https://stackoverflow.com/questions/10024866/remove-object-from-array-using-javascript
-  for (let i = 0; i < recommendedActivityCount; i++) {
-    let maxRating = Math.max.apply(
-      Math,
-      potentialActivities.map(function (activity) {
-        return getAverageRating(activity);
-      })
-    );
-    let maxRatedActivity = potentialActivities.find(function (activity) {
-      return getAverageRating(activity) == maxRating;
-    });
-
-    recommendedActivities.push(maxRatedActivity);
-    potentialActivities = potentialActivities.filter(
-      (activity) => activity.activityName == maxRatedActivity.activityName
-    );
-  }
-
-  displayRecommendations(recommendedActivities);
-}
-
 //Popular Near this Location
 //Given coordinates this function will recommend activities a number of activities that are within the given range.
 //Source: https://jsfiddle.net/45c5r246/34/
-async function PNLAlgorithm(latitude, longitude) {
+async function PNLAlgorithm(latitude, longitude, range) {
   let recommendedActivityCount = 4;
-  let range = 30000;
   let activities = await getActivities();
   let potentialActivities = filterArea(activities, latitude, longitude, range);
   let recommendedActivities = [];
 
   if (potentialActivities.length == 0) {
+    console.log("Ping problem");
     return;
   } else if (potentialActivities.length < recommendedActivityCount) {
     recommendedActivityCount = potentialActivities.length;
   }
+  console.log("Ping 2");
 
-  //Source: https://stackoverflow.com/questions/10024866/remove-object-from-array-using-javascript
   for (let i = 0; i < recommendedActivityCount; i++) {
-    let maxRating = Math.max.apply(
-      Math,
-      potentialActivities.map(function (activity) {
-        return getAverageRating(activity);
-      })
-    );
-    let maxRatedActivity = potentialActivities.find(function (activity) {
-      return getAverageRating(activity) == maxRating;
-    });
+    let ratings = [];
+    for (let j = 0; j < potentialActivities.length; j++) {
+      let rating = await getAverageRating(potentialActivities[j]);
+      ratings.push(rating);
+    }
+    console.log(ratings);
+    let maxRating = Math.max.apply(null, ratings);
+    console.log(maxRating);
 
+    let maxRatedActivity = null;
+
+    for (let j = 0; j < potentialActivities.length; j++) {
+      let rating = await getAverageRating(potentialActivities[j]);
+
+      if (rating == maxRating) {
+        maxRatedActivity = potentialActivities[j];
+        j = potentialActivities.length
+      }
+    }
+
+    console.log(maxRatedActivity);
     recommendedActivities.push(maxRatedActivity);
+
+    //Source: https://stackoverflow.com/questions/10024866/remove-object-from-array-using-javascript
     potentialActivities = potentialActivities.filter(
-      (activity) => activity.activityName == maxRatedActivity.activityName
+      (activity) => activity._id != maxRatedActivity._id
     );
   }
+  console.log("Ping 3");
   displayRecommendations(recommendedActivities);
 }
 
 //Displays the recommendations.
-function displayRecommendations(recommendedActivities) {
+async function displayRecommendations(recommendedActivities) {
   if (recommendedActivities == "" | recommendedActivities == null | recommendedActivities == undefined) {
     return;
   }
   //Empties the recommendation result sections if it contains anything.
-  let reccommendationResults = document.getElementById(
-    "reccommendationResults"
+  let recommendationResults = document.getElementById(
+    "recommendationResults"
   );
-  reccommendationResults.innerHTML = "";
+  recommendationResults.innerHTML = "";
+  var recommendedHeader = document.createElement("div");
+  recommendedHeader.innerHTML = "Recommendation Results:"
+  recommendationResults.append(recommendedHeader);
 
   for (let i = 0; i < recommendedActivities.length; i++) {
     var resultPanel = document.createElement("div");
@@ -365,6 +353,21 @@ function displayRecommendations(recommendedActivities) {
     resultPanel.className = "detailSubPanel";
     resultActivityName.innerHTML =
       "Activity: " + recommendedActivities[i].activityName;
+
+    var resultActivityAverageRating = document.createElement("div");
+    resultActivityAverageRating.id = "resultActivityAverageRating";
+    resultPanel.className = "detailSubPanel";
+    resultActivityAverageRating.innerHTML = "Average Rating: " + await getAverageRating(recommendedActivities[i]);
+
+    var resultActivityLatitude = document.createElement("div");
+    resultActivityLatitude.id = "resultActivityLatitude";
+    resultPanel.className = "detailSubPanel";
+    resultActivityLatitude.innerHTML = "Latitude: " + recommendedActivities[i].coordinates[0];
+
+    var resultActivityLongitude = document.createElement("div");
+    resultActivityLongitude.id = "resultActivityLongitude";
+    resultPanel.className = "detailSubPanel";
+    resultActivityLongitude.innerHTML = "Longitude: " + recommendedActivities[i].coordinates[1];
 
     var resultActivityDescription = document.createElement("div");
     resultActivityDescription.id = "resultActivityDescription";
@@ -394,16 +397,19 @@ function displayRecommendations(recommendedActivities) {
     resultActivityAuthor.id = "resultActivityAuthor";
     resultPanel.className = "detailSubPanel";
     resultActivityAuthor.innerHTML =
-      "Author" + recommendedActivities[i].creator;
+      "Author: " + recommendedActivities[i].creator;
 
     resultPanel.appendChild(resultActivityName);
+    resultPanel.appendChild(resultActivityAverageRating);
+    resultPanel.appendChild(resultActivityLatitude);
+    resultPanel.appendChild(resultActivityLongitude);
     resultPanel.appendChild(resultActivityDescription);
     resultPanel.appendChild(resultActivityAge);
     resultPanel.appendChild(resultActivityCategory);
     resultPanel.appendChild(resultActivityPrice);
     resultPanel.appendChild(resultActivityAuthor);
 
-    reccommendationResults.appendChild(resultPanel);
+    recommendationResults.appendChild(resultPanel);
   }
 }
 
@@ -411,7 +417,20 @@ function displayRecommendations(recommendedActivities) {
 async function filterActivities() {
   let filterResults = await getActivities();
 
+  /*
+  console.log("Filter Results:");
+  console.log("Latitude: " + document.getElementById("latitudeFilterInput").value);
+  console.log("Longitude: " + document.getElementById("longitudeFilterInput").value);
+  console.log("Range: " + document.getElementById("rangeFilterInput").value);
+  console.log("Age: " + document.getElementById("ageFilterInput").value);
+  console.log("Category: " + document.getElementById("categoryFilterInput").value);
+  console.log("Lower Price: " + document.getElementById("lowerPriceFilterInput").value);
+  console.log("Upper Price: " + document.getElementById("upperPriceFilterInput").value);
+  console.log(filterResults);
+  */
+
   filterResults = filterArea(
+    filterResults,
     document.getElementById("latitudeFilterInput").value,
     document.getElementById("longitudeFilterInput").value,
     document.getElementById("rangeFilterInput").value
@@ -421,10 +440,12 @@ async function filterActivities() {
     filterResults,
     document.getElementById("ageFilterInput").value
   );
+
   filterResults = filterCategory(
     filterResults,
     document.getElementById("categoryFilterInput").value
   );
+
   filterResults = filterPrice(
     filterResults,
     document.getElementById("lowerPriceFilterInput").value,
@@ -437,10 +458,13 @@ async function filterActivities() {
 }
 
 //Displays the filtered activities.
-function displayFilteredActivities(filteredActivities) {
+async function displayFilteredActivities(filteredActivities) {
   //Empties the filter result sections if it contains anything.
   let filterResults = document.getElementById("filterResults");
   filterResults.innerHTML = "";
+  var filterHeader = document.createElement("div");
+  filterHeader.innerHTML = "Filter Results:"
+  filterResults.append(filterHeader);
 
   //Creates a div for each activity, and fills it with divs containing its various properties.
   for (let i = 0; i < filteredActivities.length; i++) {
@@ -452,6 +476,21 @@ function displayFilteredActivities(filteredActivities) {
     resultPanel.className = "detailSubPanel";
     resultActivityName.innerHTML =
       "Activity: " + filteredActivities[i].activityName;
+
+    var resultActivityAverageRating = document.createElement("div");
+    resultActivityAverageRating.id = "resultActivityAverageRating";
+    resultPanel.className = "detailSubPanel";
+    resultActivityAverageRating.innerHTML = "Average Rating: " + await getAverageRating(filteredActivities[i]);
+
+    var resultActivityLatitude = document.createElement("div");
+    resultActivityLatitude.id = "resultActivityLatitude";
+    resultPanel.className = "detailSubPanel";
+    resultActivityLatitude.innerHTML = "Latitude: " + filteredActivities[i].coordinates[0];
+
+    var resultActivityLongitude = document.createElement("div");
+    resultActivityLongitude.id = "resultActivityLongitude";
+    resultPanel.className = "detailSubPanel";
+    resultActivityLongitude.innerHTML = "Longitude: " + filteredActivities[i].coordinates[1];
 
     var resultActivityDescription = document.createElement("div");
     resultActivityDescription.id = "resultActivityDescription";
@@ -479,9 +518,12 @@ function displayFilteredActivities(filteredActivities) {
     var resultActivityAuthor = document.createElement("div");
     resultActivityAuthor.id = "resultActivityAuthor";
     resultPanel.className = "detailSubPanel";
-    resultActivityAuthor.innerHTML = "Author" + filteredActivities[i].creator;
+    resultActivityAuthor.innerHTML = "Author: " + filteredActivities[i].creator;
 
     resultPanel.appendChild(resultActivityName);
+    resultPanel.appendChild(resultActivityAverageRating);
+    resultPanel.appendChild(resultActivityLatitude);
+    resultPanel.appendChild(resultActivityLongitude);
     resultPanel.appendChild(resultActivityDescription);
     resultPanel.appendChild(resultActivityAge);
     resultPanel.appendChild(resultActivityCategory);
@@ -503,10 +545,10 @@ async function activityVicinity(viewedActivity, range) {
   for (let i = 0; i < activities.length; i++) {
     if (
       getDistance(
-        activities[i].latitude,
-        activities[i].longitude,
-        viewedActivity.latitude,
-        viewedActivity.longitude
+        activities[i].coordinates[0],
+        activities[i].coordinates[1],
+        viewedActivity.coordinates[0],
+        viewedActivity.coordinates[1]
       ) <= range
     ) {
       potentialActivities.push(activities[i]);
@@ -517,26 +559,31 @@ async function activityVicinity(viewedActivity, range) {
 }
 
 //Filters activites to ones that exist near the given coordinates.
-function filterArea(activities, latitude, longitude, range) {
-  let potentialActivities = [];
+function filterArea(potentialActivities, latitude, longitude, range) {
+  let filteredActivities = [];
+  //console.log(potentialActivities);
 
   if ((latitude == "") | (longitude == "") | (range == "")) {
     return potentialActivities;
   } else {
-    for (let i = 0; i < activities.length; i++) {
+    for (let i = 0; i < potentialActivities.length; i++) {
+      //console.log(potentialActivities[i].coordinates[0]);
+      //console.log(potentialActivities[i].coordinates[1]);
       if (
         distanceCoordinatesKm(
-          activities[i].latitude,
-          activities[i].longitude,
+          potentialActivities[i].coordinates[0],
+          potentialActivities[i].coordinates[1],
           latitude,
           longitude
         ) <= (range/1000)
       ) {
-        potentialActivities.push(activities[i]);
+        filteredActivities.push(potentialActivities[i]);
       }
     }
   }
-  return potentialActivities;
+
+  console.log(filteredActivities);
+  return filteredActivities;
 }
 
 //Filters activities based on the provided age category.
@@ -576,7 +623,7 @@ function filterCategory(potentialActivities, givenCategory) {
 function filterPrice(potentialActivities, givenPriceLower, givenPriceUpper) {
   let filteredActivities = [];
 
-  if (givenPriceLower == "" && givenPriceUpper == "") {
+  if (givenPriceLower == "" | givenPriceUpper == "") {
     return potentialActivities;
   } else {
     for (let i = 0; i < potentialActivities.length; i++) {
@@ -596,4 +643,21 @@ async function getActivities() {
   let response = await fetch("http://localhost:5000/user-locations");
   let data = Object.values(await response.json());
   return data;
+}
+
+async function getAverageRating(activity) {
+  let response = await fetch(`http://localhost:5000/user-comments/${activity._id}`);
+  let comments = await response.json();
+  let ratingSum = 0;
+  let averageRating = 0;
+  
+  if (comments.length == 0) {
+    return averageRating
+  } else {
+    for (let i = 0; i < comments.length; i++) {
+      ratingSum = ratingSum + parseInt(comments[i].rating);
+    }
+  }
+  averageRating = ratingSum/comments.length;
+  return averageRating;
 }
