@@ -147,8 +147,8 @@ async function addMarkers() {
         );
       markers.push(marker);
     }
-    map.setCenter([lng, lat]);
   }
+  map.setCenter([lng, lat]);
   console.log("Ping 1");
   PNLAlgorithm(lat, lng, radius);
 }
@@ -162,9 +162,9 @@ function distanceCoordinatesKm(lat1, lon1, lat2, lon2) {
   var a =
     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
     Math.cos((lat1 * Math.PI) / 180) *
-    Math.cos((lat2 * Math.PI) / 180) *
-    Math.sin(dLon / 2) *
-    Math.sin(dLon / 2);
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
   var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   var d = R * c;
   return d;
@@ -253,12 +253,21 @@ async function addToSchedule(location_id) {
     "activity_description"
   ).textContent;
   let activitity_age = document.getElementById("activity_age").textContent;
-  let activity_average_price = document.getElementById("activity_average_price").textContent;
+  let activity_average_price = document.getElementById(
+    "activity_average_price"
+  ).textContent;
   let date = document.getElementById("scheduleDate").value;
 
-
-  console.log(date, location_id,actitivity_name, actitivity_category, actitivity_creator,activitity_description, activitity_age, activity_average_price);
-
+  console.log(
+    date,
+    location_id,
+    actitivity_name,
+    actitivity_category,
+    actitivity_creator,
+    activitity_description,
+    activitity_age,
+    activity_average_price
+  );
 
   await fetch(`http://localhost:5000/user-itinerary-post`, {
     method: "POST",
@@ -314,7 +323,7 @@ async function PNLAlgorithm(latitude, longitude, range) {
 
       if (rating == maxRating) {
         maxRatedActivity = potentialActivities[j];
-        j = potentialActivities.length
+        j = potentialActivities.length;
       }
     }
 
@@ -332,16 +341,18 @@ async function PNLAlgorithm(latitude, longitude, range) {
 
 //Displays the recommendations.
 async function displayRecommendations(recommendedActivities) {
-  if (recommendedActivities == "" | recommendedActivities == null | recommendedActivities == undefined) {
+  if (
+    (recommendedActivities == "") |
+    (recommendedActivities == null) |
+    (recommendedActivities == undefined)
+  ) {
     return;
   }
   //Empties the recommendation result sections if it contains anything.
-  let recommendationResults = document.getElementById(
-    "recommendationResults"
-  );
+  let recommendationResults = document.getElementById("recommendationResults");
   recommendationResults.innerHTML = "";
   var recommendedHeader = document.createElement("div");
-  recommendedHeader.innerHTML = "Recommendation Results:"
+  recommendedHeader.innerHTML = "Recommendation Results:";
   recommendationResults.append(recommendedHeader);
 
   for (let i = 0; i < recommendedActivities.length; i++) {
@@ -357,17 +368,20 @@ async function displayRecommendations(recommendedActivities) {
     var resultActivityAverageRating = document.createElement("div");
     resultActivityAverageRating.id = "resultActivityAverageRating";
     resultPanel.className = "detailSubPanel";
-    resultActivityAverageRating.innerHTML = "Average Rating: " + await getAverageRating(recommendedActivities[i]);
+    resultActivityAverageRating.innerHTML =
+      "Average Rating: " + (await getAverageRating(recommendedActivities[i]));
 
     var resultActivityLatitude = document.createElement("div");
     resultActivityLatitude.id = "resultActivityLatitude";
     resultPanel.className = "detailSubPanel";
-    resultActivityLatitude.innerHTML = "Latitude: " + recommendedActivities[i].coordinates[0];
+    resultActivityLatitude.innerHTML =
+      "Latitude: " + recommendedActivities[i].coordinates[0];
 
     var resultActivityLongitude = document.createElement("div");
     resultActivityLongitude.id = "resultActivityLongitude";
     resultPanel.className = "detailSubPanel";
-    resultActivityLongitude.innerHTML = "Longitude: " + recommendedActivities[i].coordinates[1];
+    resultActivityLongitude.innerHTML =
+      "Longitude: " + recommendedActivities[i].coordinates[1];
 
     var resultActivityDescription = document.createElement("div");
     resultActivityDescription.id = "resultActivityDescription";
@@ -463,7 +477,7 @@ async function displayFilteredActivities(filteredActivities) {
   let filterResults = document.getElementById("filterResults");
   filterResults.innerHTML = "";
   var filterHeader = document.createElement("div");
-  filterHeader.innerHTML = "Filter Results:"
+  filterHeader.innerHTML = "Filter Results:";
   filterResults.append(filterHeader);
 
   //Creates a div for each activity, and fills it with divs containing its various properties.
@@ -480,17 +494,20 @@ async function displayFilteredActivities(filteredActivities) {
     var resultActivityAverageRating = document.createElement("div");
     resultActivityAverageRating.id = "resultActivityAverageRating";
     resultPanel.className = "detailSubPanel";
-    resultActivityAverageRating.innerHTML = "Average Rating: " + await getAverageRating(filteredActivities[i]);
+    resultActivityAverageRating.innerHTML =
+      "Average Rating: " + (await getAverageRating(filteredActivities[i]));
 
     var resultActivityLatitude = document.createElement("div");
     resultActivityLatitude.id = "resultActivityLatitude";
     resultPanel.className = "detailSubPanel";
-    resultActivityLatitude.innerHTML = "Latitude: " + filteredActivities[i].coordinates[0];
+    resultActivityLatitude.innerHTML =
+      "Latitude: " + filteredActivities[i].coordinates[0];
 
     var resultActivityLongitude = document.createElement("div");
     resultActivityLongitude.id = "resultActivityLongitude";
     resultPanel.className = "detailSubPanel";
-    resultActivityLongitude.innerHTML = "Longitude: " + filteredActivities[i].coordinates[1];
+    resultActivityLongitude.innerHTML =
+      "Longitude: " + filteredActivities[i].coordinates[1];
 
     var resultActivityDescription = document.createElement("div");
     resultActivityDescription.id = "resultActivityDescription";
@@ -575,7 +592,8 @@ function filterArea(potentialActivities, latitude, longitude, range) {
           potentialActivities[i].coordinates[1],
           latitude,
           longitude
-        ) <= (range/1000)
+        ) <=
+        range / 1000
       ) {
         filteredActivities.push(potentialActivities[i]);
       }
@@ -623,7 +641,7 @@ function filterCategory(potentialActivities, givenCategory) {
 function filterPrice(potentialActivities, givenPriceLower, givenPriceUpper) {
   let filteredActivities = [];
 
-  if (givenPriceLower == "" | givenPriceUpper == "") {
+  if ((givenPriceLower == "") | (givenPriceUpper == "")) {
     return potentialActivities;
   } else {
     for (let i = 0; i < potentialActivities.length; i++) {
@@ -646,18 +664,20 @@ async function getActivities() {
 }
 
 async function getAverageRating(activity) {
-  let response = await fetch(`http://localhost:5000/user-comments/${activity._id}`);
+  let response = await fetch(
+    `http://localhost:5000/user-comments/${activity._id}`
+  );
   let comments = await response.json();
   let ratingSum = 0;
   let averageRating = 0;
-  
+
   if (comments.length == 0) {
-    return averageRating
+    return averageRating;
   } else {
     for (let i = 0; i < comments.length; i++) {
       ratingSum = ratingSum + parseInt(comments[i].rating);
     }
   }
-  averageRating = ratingSum/comments.length;
+  averageRating = ratingSum / comments.length;
   return averageRating;
 }
