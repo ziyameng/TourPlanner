@@ -1,3 +1,8 @@
+// Module code: CS5003
+// Module: Masters Programming Projects
+// Matriculation numbers: 220024877, 220033532, 220009855, 220033540, 220031591
+// Server: Creating a Holiday Planner
+
 const express = require("express");
 const cors = require("cors");
 
@@ -45,7 +50,7 @@ app.post("/user-locations", userAuth, postUserLocations);
 app.post("/user-locations-delete", deleteUserLocations);
 //add an event to itinerary pg
 app.post("/user-itinerary-post", postItinerary);
-app.get("/user-itinerary-get", getItinerary)
+app.get("/user-itinerary-get", getItinerary);
 //delete an event to itinerary pg
 
 // Other existing routes
