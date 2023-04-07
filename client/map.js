@@ -387,7 +387,7 @@ async function displayRecommendations(recommendedActivities) {
     resultActivityDescription.id = "resultActivityDescription";
     resultPanel.className = "detailSubPanel";
     resultActivityDescription.innerHTML =
-      "Description: " + recommendedActivities[i].Description;
+      "Description: " + recommendedActivities[i].description;
 
     var resultActivityAge = document.createElement("div");
     resultActivityAge.id = "resultActivityAge";
