@@ -149,7 +149,6 @@ async function addMarkers() {
     }
   }
   map.setCenter([lng, lat]);
-  console.log("Ping 1");
   PNLAlgorithm(lat, lng, radius);
 }
 
@@ -299,12 +298,10 @@ async function PNLAlgorithm(latitude, longitude, range) {
   let recommendedActivities = [];
 
   if (potentialActivities.length == 0) {
-    console.log("Ping problem");
     return;
   } else if (potentialActivities.length < recommendedActivityCount) {
     recommendedActivityCount = potentialActivities.length;
   }
-  console.log("Ping 2");
 
   for (let i = 0; i < recommendedActivityCount; i++) {
     let ratings = [];
@@ -312,9 +309,7 @@ async function PNLAlgorithm(latitude, longitude, range) {
       let rating = await getAverageRating(potentialActivities[j]);
       ratings.push(rating);
     }
-    console.log(ratings);
     let maxRating = Math.max.apply(null, ratings);
-    console.log(maxRating);
 
     let maxRatedActivity = null;
 
@@ -327,7 +322,6 @@ async function PNLAlgorithm(latitude, longitude, range) {
       }
     }
 
-    console.log(maxRatedActivity);
     recommendedActivities.push(maxRatedActivity);
 
     //Source: https://stackoverflow.com/questions/10024866/remove-object-from-array-using-javascript
@@ -335,7 +329,6 @@ async function PNLAlgorithm(latitude, longitude, range) {
       (activity) => activity._id != maxRatedActivity._id
     );
   }
-  console.log("Ping 3");
   displayRecommendations(recommendedActivities);
 }
 
@@ -430,18 +423,6 @@ async function displayRecommendations(recommendedActivities) {
 //Filters all activities by age, category and price. This is called by the filter form in the HTML.
 async function filterActivities() {
   let filterResults = await getActivities();
-
-  /*
-  console.log("Filter Results:");
-  console.log("Latitude: " + document.getElementById("latitudeFilterInput").value);
-  console.log("Longitude: " + document.getElementById("longitudeFilterInput").value);
-  console.log("Range: " + document.getElementById("rangeFilterInput").value);
-  console.log("Age: " + document.getElementById("ageFilterInput").value);
-  console.log("Category: " + document.getElementById("categoryFilterInput").value);
-  console.log("Lower Price: " + document.getElementById("lowerPriceFilterInput").value);
-  console.log("Upper Price: " + document.getElementById("upperPriceFilterInput").value);
-  console.log(filterResults);
-  */
 
   filterResults = filterArea(
     filterResults,
@@ -578,14 +559,11 @@ async function activityVicinity(viewedActivity, range) {
 //Filters activites to ones that exist near the given coordinates.
 function filterArea(potentialActivities, latitude, longitude, range) {
   let filteredActivities = [];
-  //console.log(potentialActivities);
 
   if ((latitude == "") | (longitude == "") | (range == "")) {
     return potentialActivities;
   } else {
     for (let i = 0; i < potentialActivities.length; i++) {
-      //console.log(potentialActivities[i].coordinates[0]);
-      //console.log(potentialActivities[i].coordinates[1]);
       if (
         distanceCoordinatesKm(
           potentialActivities[i].coordinates[0],
@@ -599,8 +577,6 @@ function filterArea(potentialActivities, latitude, longitude, range) {
       }
     }
   }
-
-  console.log(filteredActivities);
   return filteredActivities;
 }
 
