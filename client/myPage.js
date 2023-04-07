@@ -21,11 +21,11 @@ fetch("http://localhost:5000/user-locations")
       let cell3 = row.insertCell(2);
       let cell4 = row.insertCell(3);
       let cell5 = row.insertCell(4);
-
+      
       cell1.innerHTML = data[i].activityName;
       cell2.innerHTML = data[i].category;
       cell3.innerHTML = data[i].description;
-      cell4.innerHTML = data[i].date;
+      cell4.innerHTML = data[i].price;
       cell5.innerHTML = `<button class = "deleteBtn" id = ${data[i].id} onclick="deleteActivity('${data[i].id}')">Delete</button>`;
     }
   });
